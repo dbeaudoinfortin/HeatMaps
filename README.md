@@ -1,9 +1,10 @@
-# HeatMaps
+# HeatMaps (Coming Soon!)
 Easily create beautiful custom heat maps in only a few lines of Java code.
 
 
 ## How to use
 
+(Coming Soon!)
 
 
 ```
