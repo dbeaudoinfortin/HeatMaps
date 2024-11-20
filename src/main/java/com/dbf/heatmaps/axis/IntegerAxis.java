@@ -4,12 +4,12 @@ import java.util.Collection;
 
 public class IntegerAxis extends Axis<Integer> {
 
-	public IntegerAxis(String title) {
-		super(title);
+	public IntegerAxis() {
+		super();
 	}
 	
-	public IntegerAxis(String title, int count) {
-		super(title, count);
+	public IntegerAxis(String title) {
+		super(title);
 	}
 	
 	public IntegerAxis(String title, Collection<Integer> entries){

@@ -169,7 +169,7 @@ public class HeatMapGradient {
 	private final float   saturation;
 	private final float   brightness;
 	private final boolean clockwise;
-	
+
 	/**
 	 * Creates a custom HeatMapGradient based on an array of discrete predefined gradient steps.
 	 * Values that fall between the discrete steps will be assigned a linearly interpolated colour.
@@ -201,8 +201,8 @@ public class HeatMapGradient {
 	 * @throws IllegalArgumentException if any parameters are outside their allowed range.
 	 */
 	public HeatMapGradient(int hueStart, int hueEnd, float saturation, float brightness, boolean clockwise) {
-		if(hueStart < 0 || hueStart >= 360) throw new IllegalArgumentException("Hue Start must be at least zero and less than or equal to 360.");
-		if(hueEnd < 0 || hueEnd >= 360) throw new IllegalArgumentException("Hue End must be at least zero and less than or equal to 360.");
+		if(hueStart < 0 || hueStart > 360) throw new IllegalArgumentException("Hue Start must be at least zero and less than or equal to 360.");
+		if(hueEnd < 0 || hueEnd > 360) throw new IllegalArgumentException("Hue End must be at least zero and less than or equal to 360.");
 		if(hueEnd == hueStart) throw new IllegalArgumentException("Hue Start and Hue End cannot be the same.");
 		if(saturation < 0f || saturation > 1.0f) throw new IllegalArgumentException("Saturation must be at least zero and less than or equal to 1.");
 		if(brightness < 0f || brightness > 1.0f) throw new IllegalArgumentException("Brightness must be at least zero and less than or equal to 1.");
@@ -239,7 +239,7 @@ public class HeatMapGradient {
 		
 		return CANNED_GRADIENTS.get(gradientIndex);
 	}
-
+	
 	/**
 	 * @return total number or canned gradients that are defined
 	 * @see com.dbf.heatmaps.HeatMapGradient#getCannedGradient(int)
@@ -299,4 +299,96 @@ public class HeatMapGradient {
         int b = (int) (colour1.getBlue() * (1 - stopFraction) + colour2.getBlue() * stopFraction);
         return new Color(r, g, b);
     }
+
+	/**
+	 * Creates builder to build {@link HeatMapGradient}.
+	 * @return created builder
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static final class Builder {
+		private Color[] steps;
+		private int hueStart;
+		private int hueEnd;
+		private float saturation;
+		private float brightness;
+		private boolean clockwise;
+
+		private Builder() {
+		}
+
+		/**
+		* Builder method for steps parameter.
+		* @param steps field to set
+		* @return builder
+		*/
+		public Builder withSteps(Color[] steps) {
+			this.steps = steps;
+			return this;
+		}
+
+		/**
+		* Builder method for hueStart parameter.
+		* @param hueStart field to set
+		* @return builder
+		*/
+		public Builder withHueStart(int hueStart) {
+			this.hueStart = hueStart;
+			return this;
+		}
+
+		/**
+		* Builder method for hueEnd parameter.
+		* @param hueEnd field to set
+		* @return builder
+		*/
+		public Builder withHueEnd(int hueEnd) {
+			this.hueEnd = hueEnd;
+			return this;
+		}
+
+		/**
+		* Builder method for saturation parameter.
+		* @param saturation field to set
+		* @return builder
+		*/
+		public Builder withSaturation(float saturation) {
+			this.saturation = saturation;
+			return this;
+		}
+
+		/**
+		* Builder method for brightness parameter.
+		* @param brightness field to set
+		* @return builder
+		*/
+		public Builder withBrightness(float brightness) {
+			this.brightness = brightness;
+			return this;
+		}
+
+		/**
+		* Builder method for clockwise parameter.
+		* @param clockwise field to set
+		* @return builder
+		*/
+		public Builder withClockwise(boolean clockwise) {
+			this.clockwise = clockwise;
+			return this;
+		}
+
+		/**
+		* Build method of the builder.
+		* @return built class
+		*/
+		public HeatMapGradient build() {
+			if(null != steps) {
+				return new HeatMapGradient(steps);
+			} else {
+				return new HeatMapGradient(hueStart, hueEnd, saturation, brightness, clockwise);
+			}
+		}
+	}
 }

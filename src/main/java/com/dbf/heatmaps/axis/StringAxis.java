@@ -3,9 +3,13 @@ package com.dbf.heatmaps.axis;
 import java.util.Collection;
 
 public class StringAxis extends Axis<String> {
-
-	public StringAxis(String title, int count) {
-		super(title, count);
+	
+	public StringAxis() {
+		super();
+	}
+	
+	public StringAxis(String title) {
+		super(title);
 	}
 	
 	public StringAxis(String title, Collection<String> entries){
