@@ -21,14 +21,14 @@ And invoke the HeatMap rendering by calling the rend() method:
 
 ```java
 HeatMap.builder()
-			.withTitle(shortTitle)
-			.withXAxis(xAxis)
-			.withYAxis(yAxis)
-			.withOptions(HeatMapOptions.builder()
-					.withGradient(HeatMapGradient.BASIC_GRADIENT)
-					.build())
-			.build()
-			.render(myOutPutFile, myDataRecords);
+  .withTitle(shortTitle)
+  .withXAxis(xAxis)
+  .withYAxis(yAxis)
+  .withOptions(HeatMapOptions.builder()
+    .withGradient(HeatMapGradient.BASIC_GRADIENT)
+    .build())
+  .build()
+  .render(myOutPutFile, myDataRecords);
 ```
 
 (More documentation coming soon.)
