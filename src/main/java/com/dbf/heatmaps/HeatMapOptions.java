@@ -1,27 +1,32 @@
 package com.dbf.heatmaps;
 
+import java.awt.Color;
 import java.awt.Font;
 
 public class HeatMapOptions {
 	
 	/* MAIN CANVAS */
-	//TODO: add custom background colour
+	private static final Color DEFAULT_GRID_COLOUR = Color.BLACK;
+	private Color gridLineColour = DEFAULT_GRID_COLOUR;
+	private Color backgroundColour;
 	
 	/* CELLS */
 	private static final int DEFAULT_CELL_WIDTH  = 50;
 	private static final int DEFAULT_CELL_HEIGHT = DEFAULT_CELL_WIDTH;
 	private static final int DEFAULT_GRID_WIDTH  = 1;
-	private int cellWidth  = DEFAULT_CELL_WIDTH;
-	private int cellHeight = DEFAULT_CELL_HEIGHT;
-	private int gridLineWidth  = DEFAULT_GRID_WIDTH;
+	private int cellWidth     = DEFAULT_CELL_WIDTH;
+	private int cellHeight    = DEFAULT_CELL_HEIGHT;
+	private int gridLineWidth = DEFAULT_GRID_WIDTH;
 	
 	/* OPTIONAL REDNDERING */
-	private boolean showGridlines = false;
-	private boolean showLegend    = true;
+	private boolean showGridlines   = false;
+	private boolean showLegend      = true;
+	private boolean showXAxisLabels = true;
+	private boolean showYAxisLabels = true;
+	private boolean blendColours    = false;
 	
-	//TODO: Implement me
-	private boolean showXAxisLabels    = true;
-	private boolean showYAxisLabels    = true;
+	private static final int DEFAULT_BLEND_SCALE = 3;
+	private int     blendColoursScale = DEFAULT_BLEND_SCALE;
 	
 	/* PADDING */
 	private static final int DEFAULT_LABEL_PADDING  = 10;
@@ -35,28 +40,38 @@ public class HeatMapOptions {
 	private int legendPadding       = DEFAULT_LEGEND_PADDING;
 	
 	/* FONTS */
-	private static final Font DEFAULT_BASIC_FONT = new Font("Calibri", Font.PLAIN, 20);
-	private static final Font DEFAULT_AXIS_TITLE_FONT = new Font("Calibri", Font.BOLD, 20);
+	private static final Font DEFAULT_BASIC_FONT          = new Font("Calibri", Font.PLAIN, 20);
+	private static final Font DEFAULT_AXIS_TITLE_FONT     = new Font("Calibri", Font.BOLD, 20);
 	private static final Font DEFAULT_HEATMAP_TITLE_FONT  = new Font("Calibri", Font.BOLD, 36);
 	
-	private Font basicFont = DEFAULT_BASIC_FONT;
-	private Font axisTitleFont = DEFAULT_AXIS_TITLE_FONT;
+	private Font basicFont        = DEFAULT_BASIC_FONT;
+	private Font axisTitleFont    = DEFAULT_AXIS_TITLE_FONT;
 	private Font heatMapTitleFont = DEFAULT_HEATMAP_TITLE_FONT;
 	
-	//TODO: add custom font colours
+	private static final Color DEFAULT_FONT_COLOUR = Color.BLACK;
+	private Color basicFontColour        = DEFAULT_FONT_COLOUR;
+	private Color axisTitleFontColour    = DEFAULT_FONT_COLOUR;
+	private Color heatMapTitleFontColour = DEFAULT_FONT_COLOUR;
 	
 	/* LEGEND */
-	private String legendTextFormat = "0.####";
+	private static final String DEFAULT_LEGEND_FORMAT = "0.####";
+	private String legendTextFormat = DEFAULT_LEGEND_FORMAT;
 	private HeatMapGradient gradient = HeatMapGradient.BASIC_GRADIENT;
 	private Double colourScaleLowerBound;
 	private Double colourScaleUpperBound;
 
 	private HeatMapOptions(Builder builder) {
+		this.gridLineColour = builder.gridLineColour;
+		this.backgroundColour = builder.backgroundColour;
 		this.cellWidth = builder.cellWidth;
 		this.cellHeight = builder.cellHeight;
 		this.gridLineWidth = builder.gridLineWidth;
 		this.showGridlines = builder.showGridlines;
 		this.showLegend = builder.showLegend;
+		this.showXAxisLabels = builder.showXAxisLabels;
+		this.showYAxisLabels = builder.showYAxisLabels;
+		this.blendColours = builder.blendColours;
+		this.blendColoursScale = builder.blendColoursScale;
 		this.labelPadding = builder.labelPadding;
 		this.heatMapTitlePadding = builder.heatMapTitlePadding;
 		this.outsidePadding = builder.outsidePadding;
@@ -64,20 +79,15 @@ public class HeatMapOptions {
 		this.basicFont = builder.basicFont;
 		this.axisTitleFont = builder.axisTitleFont;
 		this.heatMapTitleFont = builder.heatMapTitleFont;
+		this.basicFontColour = builder.basicFontColour;
+		this.axisTitleFontColour = builder.axisTitleFontColour;
+		this.heatMapTitleFontColour = builder.heatMapTitleFontColour;
 		this.legendTextFormat = builder.legendTextFormat;
 		this.gradient = builder.gradient;
 		this.colourScaleLowerBound = builder.colourScaleLowerBound;
 		this.colourScaleUpperBound = builder.colourScaleUpperBound;
 	}
-	
-	/**
-	 * 
-	 * @return a new empty instance of the HeatMapOptions class
-	 */
-	public static HeatMapOptions instance() {
-		return new HeatMapOptions();
-	}
-	
+
 	public HeatMapOptions() {}
 	
 	/**
@@ -101,6 +111,8 @@ public class HeatMapOptions {
 		if(null == heatMapTitleFont) heatMapTitleFont = DEFAULT_HEATMAP_TITLE_FONT;
 		
 		if(null == gradient) gradient = HeatMapGradient.BASIC_GRADIENT;
+		
+		if(blendColoursScale < 2 || blendColoursScale>20)  throw new IllegalArgumentException("The colour blend scale must be between 2 and 20, inclusive.");
 	}
 	
 	public int getCellWidth() {
@@ -231,6 +243,82 @@ public class HeatMapOptions {
 		this.colourScaleUpperBound = colourScaleUpperBound;
 	}
 
+	public Color getGridLineColour() {
+		return gridLineColour;
+	}
+
+	public void setGridLineColour(Color gridLineColour) {
+		this.gridLineColour = gridLineColour;
+	}
+
+	public Color getBackgroundColour() {
+		return backgroundColour;
+	}
+
+	public void setBackgroundColour(Color backgroundColour) {
+		this.backgroundColour = backgroundColour;
+	}
+
+	public boolean isShowXAxisLabels() {
+		return showXAxisLabels;
+	}
+
+	public void setShowXAxisLabels(boolean showXAxisLabels) {
+		this.showXAxisLabels = showXAxisLabels;
+	}
+
+	public boolean isShowYAxisLabels() {
+		return showYAxisLabels;
+	}
+
+	public void setShowYAxisLabels(boolean showYAxisLabels) {
+		this.showYAxisLabels = showYAxisLabels;
+	}
+
+	public boolean isBlendColours() {
+		return blendColours;
+	}
+
+	public void setBlendColours(boolean blendColours) {
+		this.blendColours = blendColours;
+	}
+
+	public Color getBasicFontColour() {
+		return basicFontColour;
+	}
+
+	public void setBasicFontColour(Color basicFontColour) {
+		this.basicFontColour = basicFontColour;
+	}
+
+	public Color getAxisTitleFontColour() {
+		return axisTitleFontColour;
+	}
+
+	public void setAxisTitleFontColour(Color axisTitleFontColour) {
+		this.axisTitleFontColour = axisTitleFontColour;
+	}
+
+	public Color getHeatMapTitleFontColour() {
+		return heatMapTitleFontColour;
+	}
+
+	public void setHeatMapTitleFontColour(Color heatMapTitleFontColour) {
+		this.heatMapTitleFontColour = heatMapTitleFontColour;
+	}
+
+	public void setGridLineWidth(int gridLineWidth) {
+		this.gridLineWidth = gridLineWidth;
+	}
+
+	public int getBlendColoursScale() {
+		return blendColoursScale;
+	}
+
+	public void setBlendColoursScale(int blendColoursScale) {
+		this.blendColoursScale = blendColoursScale;
+	}
+
 	/**
 	 * Creates builder to build {@link HeatMapOptions}.
 	 * @return created builder
@@ -240,11 +328,17 @@ public class HeatMapOptions {
 	}
 
 	public static final class Builder {
+		private Color gridLineColour = DEFAULT_GRID_COLOUR;
+		private Color backgroundColour;
 		private int cellWidth = DEFAULT_CELL_WIDTH;
 		private int cellHeight = DEFAULT_CELL_HEIGHT;
 		private int gridLineWidth = DEFAULT_GRID_WIDTH;
 		private boolean showGridlines = false;
 		private boolean showLegend = true;
+		private boolean showXAxisLabels = true;
+		private boolean showYAxisLabels = true;
+		private boolean blendColours = false;
+		private int blendColoursScale = DEFAULT_BLEND_SCALE;
 		private int labelPadding = DEFAULT_LABEL_PADDING;
 		private int heatMapTitlePadding = DEFAULT_CHART_TITLE_PADDING;
 		private int outsidePadding = DEFAULT_OUTSIDE_PADDING;
@@ -252,12 +346,35 @@ public class HeatMapOptions {
 		private Font basicFont = DEFAULT_BASIC_FONT;
 		private Font axisTitleFont = DEFAULT_AXIS_TITLE_FONT;
 		private Font heatMapTitleFont = DEFAULT_HEATMAP_TITLE_FONT;
-		private String legendTextFormat = "0.####";
+		private Color basicFontColour = DEFAULT_FONT_COLOUR;
+		private Color axisTitleFontColour = DEFAULT_FONT_COLOUR;
+		private Color heatMapTitleFontColour = DEFAULT_FONT_COLOUR;
+		private String legendTextFormat = DEFAULT_LEGEND_FORMAT;
 		private HeatMapGradient gradient = HeatMapGradient.BASIC_GRADIENT;
 		private Double colourScaleLowerBound;
 		private Double colourScaleUpperBound;
 
 		private Builder() {
+		}
+
+		/**
+		* Builder method for gridLineColour parameter.
+		* @param gridLineColour field to set
+		* @return builder
+		*/
+		public Builder withGridLineColour(Color gridLineColour) {
+			this.gridLineColour = gridLineColour;
+			return this;
+		}
+
+		/**
+		* Builder method for backgroundColour parameter.
+		* @param backgroundColour field to set
+		* @return builder
+		*/
+		public Builder withBackgroundColour(Color backgroundColour) {
+			this.backgroundColour = backgroundColour;
+			return this;
 		}
 
 		/**
@@ -307,6 +424,46 @@ public class HeatMapOptions {
 		*/
 		public Builder withShowLegend(boolean showLegend) {
 			this.showLegend = showLegend;
+			return this;
+		}
+
+		/**
+		* Builder method for showXAxisLabels parameter.
+		* @param showXAxisLabels field to set
+		* @return builder
+		*/
+		public Builder withShowXAxisLabels(boolean showXAxisLabels) {
+			this.showXAxisLabels = showXAxisLabels;
+			return this;
+		}
+
+		/**
+		* Builder method for showYAxisLabels parameter.
+		* @param showYAxisLabels field to set
+		* @return builder
+		*/
+		public Builder withShowYAxisLabels(boolean showYAxisLabels) {
+			this.showYAxisLabels = showYAxisLabels;
+			return this;
+		}
+
+		/**
+		* Builder method for blendColours parameter.
+		* @param blendColours field to set
+		* @return builder
+		*/
+		public Builder withBlendColours(boolean blendColours) {
+			this.blendColours = blendColours;
+			return this;
+		}
+
+		/**
+		* Builder method for blendColoursScale parameter.
+		* @param blendColoursScale field to set
+		* @return builder
+		*/
+		public Builder withBlendColoursScale(int blendColoursScale) {
+			this.blendColoursScale = blendColoursScale;
 			return this;
 		}
 
@@ -377,6 +534,36 @@ public class HeatMapOptions {
 		*/
 		public Builder withHeatMapTitleFont(Font heatMapTitleFont) {
 			this.heatMapTitleFont = heatMapTitleFont;
+			return this;
+		}
+
+		/**
+		* Builder method for basicFontColour parameter.
+		* @param basicFontColour field to set
+		* @return builder
+		*/
+		public Builder withBasicFontColour(Color basicFontColour) {
+			this.basicFontColour = basicFontColour;
+			return this;
+		}
+
+		/**
+		* Builder method for axisTitleFontColour parameter.
+		* @param axisTitleFontColour field to set
+		* @return builder
+		*/
+		public Builder withAxisTitleFontColour(Color axisTitleFontColour) {
+			this.axisTitleFontColour = axisTitleFontColour;
+			return this;
+		}
+
+		/**
+		* Builder method for heatMapTitleFontColour parameter.
+		* @param heatMapTitleFontColour field to set
+		* @return builder
+		*/
+		public Builder withHeatMapTitleFontColour(Color heatMapTitleFontColour) {
+			this.heatMapTitleFontColour = heatMapTitleFontColour;
 			return this;
 		}
 

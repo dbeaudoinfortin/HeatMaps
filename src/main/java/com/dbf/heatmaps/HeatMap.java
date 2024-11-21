@@ -1,5 +1,6 @@
 package com.dbf.heatmaps;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -92,8 +93,8 @@ public class HeatMap {
 		
 		//Render all of the X & Y labels first so we can determine the maximum size
 		final Entry<Integer, Integer> xAxisLabelMaxSize = getMaxStringSize(xAxis.getEntryLabels().values(), options.getBasicFont());
-		final int yAxisLabelMaxWidth  = getMaxStringSize(yAxis.getEntryLabels().values(), options.getBasicFont()).getKey();
-		int xAxisLabelHeight = xAxisLabelMaxSize.getKey(); //Assume rotated by default
+		final int yAxisLabelMaxWidth = options.isShowYAxisLabels() ? getMaxStringSize(yAxis.getEntryLabels().values(), options.getBasicFont()).getKey() : 0;
+		int xAxisLabelHeight = options.isShowXAxisLabels() ? xAxisLabelMaxSize.getKey() : 0; //Assume rotated by default
 		
 		//Since the font height is the same for all basic text, we can use the axis labels
 		final int basicFontHeight = xAxisLabelMaxSize.getValue();
@@ -102,19 +103,22 @@ public class HeatMap {
 		final Entry<Integer, Integer> xTitleDimensions = getMaxStringSize(Collections.singletonList(xAxis.getTitle()), options.getAxisTitleFont());
 		final Entry<Integer, Integer> yTitleDimensions = getMaxStringSize(Collections.singletonList(yAxis.getTitle()), options.getAxisTitleFont());
 		
-		//The cells need to be at least as big as the font height
+		//When labels are enabled, the cells need to be at least as big as the font height
 		//This is true for the x-axis as  well since at a minimum we can rotate the text
-		final int cellWidth  = Math.max(options.getCellWidth(), basicFontHeight + options.getLabelPadding());
-		final int cellHeight = Math.max(options.getCellHeight(), basicFontHeight + options.getLabelPadding());
+		final int cellWidth  = Math.max(options.getCellWidth(),  options.isShowXAxisLabels() ? basicFontHeight + options.getLabelPadding() : 0);
+		final int cellHeight = Math.max(options.getCellHeight(), options.isShowYAxisLabels() ? basicFontHeight + options.getLabelPadding() : 0);
 		
 		//Save a little bit of math later
-		final int halfCellWidth  = cellWidth / 2;
+		final int halfCellWidth  = cellWidth  / 2;
 		final int halfCellHeight = cellHeight / 2;
 		
-		//Only rotate the x-axis labels when they are too big
-		final boolean rotateXLabels = (xAxisLabelHeight ) > (cellWidth + (options.isShowGridlines() ? options.getGridLineWidth() : 0) - options.getLabelPadding());
-		if(!rotateXLabels) {
-			xAxisLabelHeight = xAxisLabelMaxSize.getValue();
+		boolean rotateXLabels = false;
+		if(options.isShowXAxisLabels()) {
+			//Only rotate the x-axis labels when they are too big
+			rotateXLabels = (xAxisLabelHeight ) > (cellWidth + (options.isShowGridlines() ? options.getGridLineWidth() : 0) - options.getLabelPadding());
+			if(!rotateXLabels) {
+				xAxisLabelHeight = xAxisLabelMaxSize.getValue();
+			}
 		}
 		
 		//Calculate the legend values
@@ -149,7 +153,7 @@ public class HeatMap {
 		//Calculate the X positional values of all of the elements first
 		final int yAxisTitleStartPosX = options.getOutsidePadding() + (!yAxis.getTitle().isEmpty() ? yTitleDimensions.getValue() : 0);
 		final int yAxisLabelStartPosX = yAxisTitleStartPosX + (!yAxis.getTitle().isEmpty() ? options.getLabelPadding()*2 : 0);
-		final int matrixStartPosX = yAxisLabelStartPosX + yAxisLabelMaxWidth + options.getLabelPadding();
+		final int matrixStartPosX = yAxisLabelStartPosX + (options.isShowYAxisLabels() ? yAxisLabelMaxWidth + options.getLabelPadding() : 0);
 		final int matrixWidth = (xAxis.getCount()  * cellWidth) + (options.isShowGridlines() ? (xAxis.getCount() + 1) * options.getGridLineWidth() : 0);
 		final int matrixCentreX =  matrixStartPosX + (matrixWidth/2);
 		final int xAxisLabelStartPosX = matrixStartPosX + (options.isShowGridlines() ? options.getGridLineWidth() : 0);
@@ -171,8 +175,8 @@ public class HeatMap {
 		//Now that we know the chart title height, we can calculate the Y positional values
         final int chartTitleStartPosY = options.getOutsidePadding();
 		final int xAxisTitleStartPosY = chartTitleStartPosY + (!title.isEmpty() ? chartTitleHeight + options.getHeatMapTitlePadding() : 0) + (!xAxis.getTitle().isEmpty() ? xTitleDimensions.getValue() : 0); //Label positions are bottom left!!
-		final int xAxisLabelStartPosY = xAxisTitleStartPosY + (!xAxis.getTitle().isEmpty() ? options.getLabelPadding()*2 : 0) + xAxisLabelHeight;
-		final int matrixStartPosY = xAxisLabelStartPosY + options.getLabelPadding();
+		final int xAxisLabelStartPosY = xAxisTitleStartPosY + (!xAxis.getTitle().isEmpty() ? options.getLabelPadding()*2 : 0) + (options.isShowXAxisLabels() ? xAxisLabelHeight : 0);
+		final int matrixStartPosY = xAxisLabelStartPosY + (options.isShowXAxisLabels() ? options.getLabelPadding() : 0);
 		final int matrixHeight = (yAxis.getCount()  * cellHeight) + (options.isShowGridlines() ? (yAxis.getCount() + 1) * options.getGridLineWidth() : 0);
 		final int matrixCentreY =  matrixStartPosY + (matrixHeight/2);
 		final int yAxisLabelStartPosY = matrixStartPosY + (options.isShowGridlines() ? options.getGridLineWidth() : 0);
@@ -187,24 +191,30 @@ public class HeatMap {
         Graphics2D g2d = heatmapImage.createGraphics();
         
         //Start the actual drawing onto the canvas
-		 try {
-			//Make the background all white, except if the colour scale goes to white
-			Color maxColour = options.getGradient().getColour(1.0);
-			if(maxColour.getBlue() > 240 && maxColour.getGreen() > 240 && maxColour.getRed() > 240) {
-				g2d.setColor(new Color(210, 210, 210));
-			} else {
-				g2d.setColor(Color.WHITE);
-			}
-			g2d.fillRect(0, 0, imageWidth, imageHeight);
-				
-			//Render the text smoothly
+		 try {	 
+			//Render the text smoothly, always
 			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			 
+			//If the background colour is explicitly set, then use it. Otherwise, automatically determine a good colour.
+			if(null != options.getBackgroundColour()) {
+				g2d.setColor(options.getBackgroundColour());
+			} else {
+				//Make the background all white, except if the colour scale goes to white
+				Color maxColour = options.getGradient().getColour(1.0);
+				if(maxColour.getBlue() > 240 && maxColour.getGreen() > 240 && maxColour.getRed() > 240) {
+					g2d.setColor(new Color(210, 210, 210));
+				} else {
+					g2d.setColor(Color.WHITE);
+				}
+			}
+			//Paint the background
+			g2d.fillRect(0, 0, imageWidth, imageHeight);
 			
 			//Render the chart title
 			if(!title.isEmpty()) {
 				//Set the title font
 				g2d.setFont(options.getHeatMapTitleFont());
-				g2d.setColor(Color.BLACK);
+				g2d.setColor(options.getHeatMapTitleFontColour());
 				for (int i = 0; i < titleLines.size(); i++) {
 					Entry<String, Entry<Integer, Integer>> line = titleLines.get(i);
 					// Label positions are bottom left so we need to add 1 to the line number
@@ -218,7 +228,7 @@ public class HeatMap {
 	        if (options.isShowLegend()) {
 	        	//Reset to a decent basic font
 		        g2d.setFont(options.getBasicFont());
-		        g2d.setColor(Color.BLACK);
+		        g2d.setColor(options.getBasicFontColour());
 		        
 		        //Render the legend labels
 	    		//The number of legend boxes may be greater than the number of labels
@@ -248,13 +258,13 @@ public class HeatMap {
 					//Also render the dividing lines
 					//The last box doesn't need a line, that's handled by the outside border
 					if(options.isShowGridlines() && (i != legendBoxes -1)) {
-						g2d.setColor(Color.BLACK); //Reset back to black! The last colour was from the legend
+						g2d.setColor(options.getGridLineColour()); //Reset back to grid line colour! The last colour was from the legend
 						g2d.fillRect(legendBoxPosX, legendBoxPosY + cellHeight, cellWidth, options.getGridLineWidth()); 
 					}
 	    		}
 	    		
 	    		//Render the legend grid lines or outside border
-	    		g2d.setColor(Color.BLACK);
+	    		g2d.setColor(options.getGridLineColour());
 	    		if(options.isShowGridlines()) {
 	    			g2d.fillRect(legendStartPosX, legendStartPosY, legendBoxesWidth, options.getGridLineWidth()); //Top
 	    			g2d.fillRect(legendStartPosX, legendStartPosY + legendHeight - options.getGridLineWidth(), legendBoxesWidth, options.getGridLineWidth()); //Bottom
@@ -268,7 +278,7 @@ public class HeatMap {
     		
     		//Will will need to determine the width of each axis title individually using fontMetrics
     		g2d.setFont(options.getAxisTitleFont());
-    		g2d.setColor(Color.BLACK); //Reset back to black! The last colour was from the legend
+    		g2d.setColor(options.getAxisTitleFontColour()); //Set to Axis title colour. The last colour was from the legend.
     		
     		//Render the X-axis title
 	    	if(!xAxis.getTitle().isEmpty()) {
@@ -290,64 +300,127 @@ public class HeatMap {
     		
     		//Will will need to determine the width of each label individually using fontMetrics
     		g2d.setFont(options.getBasicFont());
+    		g2d.setColor(options.getBasicFontColour());
 	    	FontMetrics labelFontMetrics = g2d.getFontMetrics(); //Font is different between titles and labels
 	    	
-    		//Add all of the x labels, drawn vertically or horizontally
-	    	AffineTransform transform;
-    		for (Entry<String, Integer> entry : xAxis.getLabelIndices().entrySet()) {
-    			if(rotateXLabels) {
-	    			//Store the current transform
-	    			transform = g2d.getTransform();
-	    			final int cellOffsetX = xAxisLabelStartPosX + (entry.getValue() * cellWidth) + (options.isShowGridlines() ? entry.getValue()*options.getGridLineWidth() : 0) + halfCellWidth + (basicFontHeight/4);
-	    			g2d.translate(cellOffsetX, xAxisLabelStartPosY);
-	    			g2d.rotate(-Math.PI / 2); // Rotate 90 degrees counter-clockwise
-	    			
-	    			// Draw the x axis label
-	    			g2d.drawString(entry.getKey(), 0, 0);
-    	
-	    			//Restore the old transform
-	    			g2d.setTransform(transform);
-    			} else {
-    				final int labelWidth = labelFontMetrics.stringWidth(entry.getKey());
-    				final int cellOffsetX = xAxisLabelStartPosX - (labelWidth/2) + (entry.getValue() * cellWidth) + (options.isShowGridlines() ? entry.getValue()*options.getGridLineWidth() : 0) + halfCellWidth;
-    				g2d.drawString(entry.getKey(), cellOffsetX, xAxisLabelStartPosY);
+	    	if(options.isShowXAxisLabels()) {
+	    		//Add all of the x labels, drawn vertically or horizontally
+		    	AffineTransform transform;
+	    		for (Entry<String, Integer> entry : xAxis.getLabelIndices().entrySet()) {
+	    			if(rotateXLabels) {
+		    			//Store the current transform
+		    			transform = g2d.getTransform();
+		    			final int cellOffsetX = xAxisLabelStartPosX + (entry.getValue() * cellWidth) + (options.isShowGridlines() ? entry.getValue()*options.getGridLineWidth() : 0) + halfCellWidth + (basicFontHeight/4);
+		    			g2d.translate(cellOffsetX, xAxisLabelStartPosY);
+		    			g2d.rotate(-Math.PI / 2); // Rotate 90 degrees counter-clockwise
+		    			
+		    			// Draw the x axis label
+		    			g2d.drawString(entry.getKey(), 0, 0);
+	    	
+		    			//Restore the old transform
+		    			g2d.setTransform(transform);
+	    			} else {
+	    				final int labelWidth = labelFontMetrics.stringWidth(entry.getKey());
+	    				final int cellOffsetX = xAxisLabelStartPosX - (labelWidth/2) + (entry.getValue() * cellWidth) + (options.isShowGridlines() ? entry.getValue()*options.getGridLineWidth() : 0) + halfCellWidth;
+	    				g2d.drawString(entry.getKey(), cellOffsetX, xAxisLabelStartPosY);
+	    			}
+	    		}
+	    	}
+	    	
+	    	if(options.isShowYAxisLabels()) {
+	    		//Add all of the y labels, drawn horizontally
+	    		for (Entry<String, Integer> entry : yAxis.getLabelIndices().entrySet()) {
+	    			final int labelWidth = labelFontMetrics.stringWidth(entry.getKey());
+	    			final int cellOffsetY = yAxisLabelStartPosY + (basicFontHeight/4) + (entry.getValue() * cellHeight) + (options.isShowGridlines() ? entry.getValue()*options.getGridLineWidth() : 0) + halfCellHeight;
+	    			//Aligned right
+	    			g2d.drawString(entry.getKey(), yAxisLabelStartPosX + (yAxisLabelMaxWidth - labelWidth), cellOffsetY);
+	    		}
+	    	}
+    		
+    		//Determine if we should smoothly blend the colours    		
+    		if(options.isBlendColours()) {
+    			final int scaleFactor = options.getBlendColoursScale();
+    			
+    			//Blending colours means we are going to first render the graph as a tiny image and then scale it up using interpolation.
+    			//Render the whole map using a single pixel per cell
+    			final int tinyMatrixWidth = xAxis.getCount();
+    			final int tinyMatrixHeight = yAxis.getCount();
+    			final int bilinearMatrixWidth = tinyMatrixWidth*scaleFactor;
+    			final int bilinearMatrixHeight = tinyMatrixHeight*scaleFactor;
+    			
+    			BufferedImage tinyMatrixImage = new BufferedImage(tinyMatrixWidth, tinyMatrixHeight, BufferedImage.TYPE_INT_ARGB);
+    			BufferedImage bilinearMatrixMask = new BufferedImage(bilinearMatrixWidth, bilinearMatrixHeight, BufferedImage.TYPE_INT_ARGB);
+    			
+    	        Graphics2D g2dTiny = tinyMatrixImage.createGraphics();
+    	        Graphics2D g2dBilinearMask = bilinearMatrixMask.createGraphics();
+    	        g2dBilinearMask.setColor(Color.BLACK); //Black means fully opaque
+    	        
+    	        for (DataRecord record: data) {
+        			//Determine the colour for this pixel of the map
+    				final double val = minClamped || maxClamped ? Math.max(Math.min(record.getValue().doubleValue(), maxValue), minValue) : record.getValue().doubleValue();
+    				g2dTiny.setColor(options.getGradient().getColour((valueRange == 0 ? 1.0 : (val-minValue) / valueRange)));
+        			g2dTiny.fillRect(xAxis.getIndex(record.getX()), yAxis.getIndex(record.getY()), 1, 1);
+        			g2dBilinearMask.fillRect(xAxis.getIndex(record.getX())*scaleFactor, yAxis.getIndex(record.getY())*scaleFactor, scaleFactor, scaleFactor);
+    			}
+    	        
+    	        g2dBilinearMask.dispose();
+    	        g2dTiny.dispose();
+    	        
+    	        //Now we scale the image up using bilinear scaling
+    	        //This will linearly interpolate the colours of each pixel
+    	        //We use bilinear interpolation because it will only consider a single neighbouring pixel in each direction
+    			BufferedImage bilinearScaledImage = new BufferedImage(bilinearMatrixWidth, bilinearMatrixHeight, BufferedImage.TYPE_INT_ARGB);
+    	        Graphics2D g2dbilinearScaled = bilinearScaledImage.createGraphics();
+    	        g2dbilinearScaled.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    	        g2dbilinearScaled.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+    	        g2dbilinearScaled.drawRenderedImage(tinyMatrixImage,  AffineTransform.getScaleInstance(scaleFactor, scaleFactor));
+    	        
+    	        //We need to clean up the transparent sections of the image since they have been blended.
+    	        //The mask will give us crisp transparent edges after the scaling is applied
+    	        g2dbilinearScaled.setComposite(AlphaComposite.DstIn);
+    	        g2dbilinearScaled.drawImage(bilinearMatrixMask, 0, 0, null);
+    	        g2dbilinearScaled.dispose();
+    			
+    	        //Scale the tiny image up to the full size using nearest neighbour interpolation
+    	        //We use nearest neighbour interpolation because it will keep the edges sharp
+    	        BufferedImage scaledImage = new BufferedImage(matrixWidth, matrixHeight, BufferedImage.TYPE_INT_ARGB);
+    	        Graphics2D g2dScaled = scaledImage.createGraphics();
+    	        g2dScaled.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+    	        g2dScaled.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+    	        g2dScaled.drawRenderedImage(bilinearScaledImage,  AffineTransform.getScaleInstance(((double)matrixWidth)/bilinearMatrixWidth, ((double)matrixHeight)/bilinearMatrixHeight));
+    	        g2dScaled.dispose();
+    	        
+    	        //Draw the scaled image on top of the main canvas
+    	        //Note that the grid lines, if present, will be drawn directly on top
+    	        g2d.drawImage(scaledImage, matrixStartPosX, matrixStartPosY, null);
+    		} else {
+    			//Draw the heat map itself, normally. No scaling trickery, this is much simpler.
+        		for (DataRecord record: data) {
+        			final int x = xAxis.getIndex(record.getX());
+        			final int y = yAxis.getIndex(record.getY());
+        			
+        			//Determine the colour for this square of the map
+    				final double val = minClamped || maxClamped ? Math.max(Math.min(record.getValue().doubleValue(), maxValue), minValue) : record.getValue().doubleValue();
+    				g2d.setColor(options.getGradient().getColour((valueRange == 0 ? 1.0 : (val-minValue) / valueRange)));
+    				
+    				final int matrixCellOffsetX = options.isShowGridlines() ?  x * (cellWidth  + options.getGridLineWidth()) : x * cellWidth;
+    				final int matrixCellOffsetY = options.isShowGridlines() ?  y * (cellHeight + options.getGridLineWidth()) : y * cellHeight;
+    				
+    				final int matrixBoxPosX = matrixStartPosX + (options.isShowGridlines() ? options.getGridLineWidth() : 0) + matrixCellOffsetX;
+        			final int matrixBoxPosY = matrixStartPosY + (options.isShowGridlines() ? options.getGridLineWidth() : 0) + matrixCellOffsetY;
+    				g2d.fillRect(matrixBoxPosX, matrixBoxPosY, cellWidth, cellHeight);
     			}
     		}
     		
-    		//Add all of the y labels, drawn horizontally
-    		for (Entry<String, Integer> entry : yAxis.getLabelIndices().entrySet()) {
-    			final int labelWidth = labelFontMetrics.stringWidth(entry.getKey());
-    			final int cellOffsetY = yAxisLabelStartPosY + (basicFontHeight/4) + (entry.getValue() * cellHeight) + (options.isShowGridlines() ? entry.getValue()*options.getGridLineWidth() : 0) + halfCellHeight;
-    			//Aligned right
-    			g2d.drawString(entry.getKey(), yAxisLabelStartPosX + (yAxisLabelMaxWidth - labelWidth), cellOffsetY);
-    		}
-    		
-			//Draw the heat map itself
-    		for (DataRecord record: data) {
-    			final int x = xAxis.getIndex(record.getX());
-    			final int y = yAxis.getIndex(record.getY());
-    			
-    			//Determine the colour for this square of the map
-				final double val = minClamped || maxClamped ? Math.max(Math.min(record.getValue().doubleValue(), maxValue), minValue) : record.getValue().doubleValue();
-				g2d.setColor(options.getGradient().getColour((valueRange == 0 ? 1.0 : (val-minValue) / valueRange)));
-				
-				final int matrixCellOffsetX = options.isShowGridlines() ?  x * (cellWidth  + options.getGridLineWidth()) : x * cellWidth;
-				final int matrixCellOffsetY = options.isShowGridlines() ?  y * (cellHeight + options.getGridLineWidth()) : y * cellHeight;
-				
-				final int matrixBoxPosX = matrixStartPosX + (options.isShowGridlines() ? options.getGridLineWidth() : 0) + matrixCellOffsetX;
-    			final int matrixBoxPosY = matrixStartPosY + (options.isShowGridlines() ? options.getGridLineWidth() : 0) + matrixCellOffsetY;
-				g2d.fillRect(matrixBoxPosX, matrixBoxPosY, cellWidth, cellHeight);
-			}
-    		
     		//Draw the grid lines
 			if(options.isShowGridlines()) {
-				g2d.setColor(Color.BLACK); //Reset back to black! The last colour was from the matrix
-				for(int y = 0; y <= yAxis.getCount(); y++) {
+				g2d.setColor(options.getGridLineColour()); //Reset back to grid line colour! The last colour was from the matrix.
+				for(int y = 0; y <= yAxis.getCount(); y++) { //Y grid lines
 					final int matrixOffsetY = y * (cellHeight + options.getGridLineWidth());
 					g2d.fillRect(matrixStartPosX, matrixStartPosY + matrixOffsetY , matrixWidth, options.getGridLineWidth()); // Top line of each row
 				}
 				
-				for(int x = 0; x <= xAxis.getCount(); x++) {
+				for(int x = 0; x <= xAxis.getCount(); x++) { //X grid lines
 					final int matrixOffsetX = x * (cellWidth + options.getGridLineWidth());
 					g2d.fillRect(matrixStartPosX + matrixOffsetX, matrixStartPosY , options.getGridLineWidth(), matrixHeight); // Top line of each row
 				}
