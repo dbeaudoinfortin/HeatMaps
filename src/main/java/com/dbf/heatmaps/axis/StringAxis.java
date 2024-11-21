@@ -4,6 +4,10 @@ import java.util.Collection;
 
 public class StringAxis extends Axis<String> {
 	
+	public static StringAxis instance() {
+		return new StringAxis();
+	}
+	
 	public StringAxis() {
 		super();
 	}
@@ -16,17 +20,20 @@ public class StringAxis extends Axis<String> {
 		super(title, entries);
 	}
 	
-	public StringAxis(String title, String... strings) {
-		super(title, strings.length);
-		for(int i = 0; i < strings.length; i++ ) {
-			entryLabels.put(strings[i], strings[i]);
-			entryIndices.put(strings[i], i);
-			labelIndices.put(strings[i], i);
-		}
+	public StringAxis(String title, String... entries) {
+		super(title);
+		addEntries(entries);
 	}
 	
-	public void addEntry(String entry) {
-		super.addEntry(entry, entry);
+	public StringAxis addEntries(String... entries) {
+		for(String entry : entries) {
+			addEntry(entry);
+		}
+		return this;
+	}
+	
+	public StringAxis addEntry(String entry) {
+		return (StringAxis) super.addEntry(entry, entry);
 	}
 	
 	@Override
@@ -38,5 +45,14 @@ public class StringAxis extends Axis<String> {
 	public Integer getIndex(Object entry) {
 		return this.entryIndices.get((String) entry);
 	}
-
+	
+	@Override
+	public StringAxis withTitle(String title) {
+		return (StringAxis) super.withTitle(title);
+	}
+	
+	@Override
+	public StringAxis addEntry(String entry, String label) {
+		return (StringAxis) super.addEntry(entry, label);
+	}
 }

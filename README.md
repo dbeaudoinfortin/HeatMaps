@@ -79,8 +79,6 @@ StringAxis yAxis = new StringAxis("Weird Cars", "BMC Landcrab", "Ford Probe", "R
   <img src="https://github.com/user-attachments/assets/373d0966-0c9a-4739-b014-c8b2ddf6c1e6" width="400" />
 </p>
 
-(More varied examples coming soon.)
-
 ## Customization Options
 
 The heat maps are highly customizable, down to colours, fonts, gradients, titles, layout, etc. The following customization options are provided out of the box:
@@ -129,7 +127,7 @@ The default colour palette, if not specified, is set to number 3. Here are examp
 
 ## Colour Blending
 
-Enabling the `blendColours` option will result in a linear colour interpolation being applied to the cells of the heat map in order to "smooth out" the values. This effect works by first rendering each cell as a single pixel, then applying a bilinear upscaler (with a variable scaling factor), followed by applying an alpha mask to avoid blending with empty cells, and finally applying a nearest-neighbour up or down scaling to the final output resolution. The strength of this effect can be controlled via the `blendColoursScale` option, which supports values between 2 and 20, inclusive. Here is an example of what colour blending looks like, starting with no effect, then a strength of 2, 3, 5,and 10, respectively.
+Enabling the `blendColours` option will result in a linear colour interpolation being applied to the cells of the heat map in order to "smooth out" the values. This effect works by first rendering each cell as a single pixel, then applying a bilinear upscaler (with a variable scaling factor), followed by applying an alpha mask to avoid blending with empty cells, and finally applying a nearest-neighbour up or down scaling to the final output resolution. The strength of this effect can be controlled via the `blendColoursScale` option, which supports values between 2 and 20, inclusive. By default, a value of 3 is used which will upscale each cell to a 3x3 grid, ensuring that the centre of the grid always represents the true colour of the corresponding data. Here is an example of what colour blending looks like, starting with no effect, then a strength of 2, 3, 5,and 10, respectively.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/f64e9520-7f8b-4473-be04-34be30771b69" width="200" />
@@ -141,7 +139,9 @@ Enabling the `blendColours` option will result in a linear colour interpolation 
 
 ## How It Works
 
-(Documentation coming soon.)
+This library is built from scratch using the Java 2D graphics classes. To make it easy to integrate with your project, there are no external dependencies, only Java 8 or later.
+
+(more documentation coming soon.)
 
 ## Requirements
 

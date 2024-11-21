@@ -4,6 +4,10 @@ import java.util.Collection;
 
 public class IntegerAxis extends Axis<Integer> {
 
+	public static IntegerAxis instance() {
+		return new IntegerAxis();
+	}
+	
 	public IntegerAxis() {
 		super();
 	}
@@ -18,14 +22,14 @@ public class IntegerAxis extends Axis<Integer> {
 
 	public IntegerAxis(String title, int min, int max) {
 		super(title);
-		int count = 0;
+		addEntries(min, max);
+	}
+	
+	public IntegerAxis addEntries(int min, int max) {
 		for(int i = min; i <= max; i++ ) {
-			final String label = "" + i;
-			entryLabels.put(i, label);
-			labelIndices.put(label, count);
-			entryIndices.put(i, count++);	
+			addEntry(i, "" + i);
 		}
-		this.count = count;
+		return this;
 	}
 
 	@Override
@@ -36,5 +40,15 @@ public class IntegerAxis extends Axis<Integer> {
 	@Override
 	public Integer getIndex(Object entry) {
 		return this.entryIndices.get((Integer) entry);
+	}
+	
+	@Override
+	public IntegerAxis withTitle(String title) {
+		return (IntegerAxis) super.withTitle(title);
+	}
+	
+	@Override
+	public IntegerAxis addEntry(Integer entry, String label) {
+		return (IntegerAxis) super.addEntry(entry, label);
 	}
 }

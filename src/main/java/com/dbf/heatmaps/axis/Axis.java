@@ -52,12 +52,14 @@ public abstract class Axis<T> {
 	
 	public abstract Integer getIndex(Object entry);
 	
-	public void addEntry(T entry, String label) {
-		if(entryLabels.containsKey(entry)) return;
-		entryLabels.put(entry, label);
-		entryIndices.put(entry, count);
-		labelIndices.put(label, count);
-		count++;
+	public Axis<T> addEntry(T entry, String label) {
+		if(!entryLabels.containsKey(entry)) {
+			entryLabels.put(entry, label);
+			entryIndices.put(entry, count);
+			labelIndices.put(label, count);
+			count++;
+		}
+		return this;
 	}
 
 	public String getTitle() {
@@ -67,5 +69,10 @@ public abstract class Axis<T> {
 	public void setTitle(String title) {
 		if(null == title) title = "";
 		this.title = title;
+	}
+	
+	public Axis<T> withTitle(String title) {
+		setTitle(title);
+		return this;
 	}
 }

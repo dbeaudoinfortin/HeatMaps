@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.dbeaudoinfortin</groupId>
 	<artifactId>heatmaps</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<packaging>jar</packaging>
 	<name>HeatMaps</name>
 	<description>Build customized heat maps diagrams the quick and easy way!</description>
@@ -25,7 +25,12 @@
 		<url>https://github.com/dbeaudoinfortin/HeatMaps/tree/main</url>
 	</scm>
 	<dependencies>
-		
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.11.3</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

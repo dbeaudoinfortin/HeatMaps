@@ -91,13 +91,18 @@ public class HeatMap {
 			maxValue = options.getColourScaleUpperBound();
 		}
 		
-		//Render all of the X & Y labels first so we can determine the maximum size
-		final Entry<Integer, Integer> xAxisLabelMaxSize = getMaxStringSize(xAxis.getEntryLabels().values(), options.getBasicFont());
-		final int yAxisLabelMaxWidth = options.isShowYAxisLabels() ? getMaxStringSize(yAxis.getEntryLabels().values(), options.getBasicFont()).getKey() : 0;
-		int xAxisLabelHeight = options.isShowXAxisLabels() ? xAxisLabelMaxSize.getKey() : 0; //Assume rotated by default
+		//Determine the dimensions of the X-axis and Y-axis labels
+		//We need to render all of the X & Y labels first so we can determine the maximum size the labels will take to render
+		final Entry<Integer, Integer> xAxisLabelMaxSize = getMaxStringSize(options.isShowXAxisLabels() ? xAxis.getEntryLabels().values() : Collections.emptyList(), options.getAxisLabelFont());
+		final Entry<Integer, Integer> yAxisLabelMaxSize = getMaxStringSize(options.isShowXAxisLabels() ? yAxis.getEntryLabels().values() : Collections.emptyList(), options.getAxisLabelFont());
+		int xAxisLabelHeight = xAxisLabelMaxSize.getKey(); //Assume rotated by default, we'll check this assumption later
+		final int yAxisLabelMaxWidth = yAxisLabelMaxSize.getKey();
+		final int axisLabelFontHeight = Math.max(xAxisLabelMaxSize.getValue(), yAxisLabelMaxSize.getValue()); //May or may be set by either axis
 		
-		//Since the font height is the same for all basic text, we can use the axis labels
-		final int basicFontHeight = xAxisLabelMaxSize.getValue();
+		//Determine the dimensions of grid values
+		final DecimalFormat dataValuesDF = new DecimalFormat(options.getGridValuesFormat()); //Not thread safe, don't make static
+		final List<String> dataValues = options.isShowGridValues() ? data.stream().map(r-> r.getValue() == null ? "" : dataValuesDF.format(r.getValue())).collect(Collectors.toList()) : Collections.emptyList();
+		final Entry<Integer, Integer> gridValuesDimensions = getMaxStringSize(dataValues, options.getGridValuesFont());
 		
 		//Determine the dimensions of the axis titles
 		final Entry<Integer, Integer> xTitleDimensions = getMaxStringSize(Collections.singletonList(xAxis.getTitle()), options.getAxisTitleFont());
@@ -105,24 +110,33 @@ public class HeatMap {
 		
 		//When labels are enabled, the cells need to be at least as big as the font height
 		//This is true for the x-axis as  well since at a minimum we can rotate the text
-		final int cellWidth  = Math.max(options.getCellWidth(),  options.isShowXAxisLabels() ? basicFontHeight + options.getLabelPadding() : 0);
-		final int cellHeight = Math.max(options.getCellHeight(), options.isShowYAxisLabels() ? basicFontHeight + options.getLabelPadding() : 0);
+		int cellWidth  = Math.max(options.getCellWidth(),  options.isShowXAxisLabels() ? axisLabelFontHeight + options.getLabelPadding() : 0);
+		int cellHeight = Math.max(options.getCellHeight(), options.isShowYAxisLabels() ? axisLabelFontHeight + options.getLabelPadding() : 0);
 		
-		//Save a little bit of math later
+		//The cells also need to be big enough to display the grid values if we are rendering those
+		if(options.isShowGridValues()) {
+			//We need to leave a bit of margin around the text to not squeeze it. 4 pixels on all sides should be fine.
+			cellWidth  = Math.max(cellWidth,  gridValuesDimensions.getKey() + 8);
+			cellHeight = Math.max(cellHeight, gridValuesDimensions.getValue() + 8);
+		}
+		
+		//Save a little bit of math later on
 		final int halfCellWidth  = cellWidth  / 2;
 		final int halfCellHeight = cellHeight / 2;
 		
+		//Now that we now the width of our grid cells, we can determine if we need to rotate x-axis labels and print them out vertically
 		boolean rotateXLabels = false;
 		if(options.isShowXAxisLabels()) {
 			//Only rotate the x-axis labels when they are too big
-			rotateXLabels = (xAxisLabelHeight ) > (cellWidth + (options.isShowGridlines() ? options.getGridLineWidth() : 0) - options.getLabelPadding());
+			rotateXLabels = options.isxAxisLabelsRotate() || ((xAxisLabelHeight ) > (cellWidth + (options.isShowGridlines() ? options.getGridLineWidth() : 0) - options.getLabelPadding()));
 			if(!rotateXLabels) {
 				xAxisLabelHeight = xAxisLabelMaxSize.getValue();
 			}
 		}
 		
 		//Calculate the legend values
-		final int legendBoxes = options.isShowLegend() ? (yAxis.getCount() > 5 ? yAxis.getCount() : 5) : 0; //If present, must be at least 5
+		//We use the defined size, if provided. Otherwise, we take the greater of either the number of cells of the Y-axis or 5.
+		final int legendBoxes = options.isShowLegend() ? (options.getLegendSteps() != null ? options.getLegendSteps() : (yAxis.getCount() > 5 ? yAxis.getCount() : 5)) : 0;
 		final double valueRange = maxValue - minValue;
 		final double legendSteps = options.isShowLegend()  ? (valueRange > 0 ? valueRange / (legendBoxes-1) : 0) : 0;
 		final List<Double> legendvalues = new ArrayList<Double>(legendBoxes);
@@ -145,15 +159,19 @@ public class HeatMap {
 		}
 		
 		//Calculate legend sizes
+		final Entry<Integer, Integer> legendLabelDimensions = getMaxStringSize(legendLabels, options.getAxisTitleFont());
+		final int legendLabelMaxWidth = legendLabelDimensions.getKey();
+		final int legendLabelHeight = legendLabelDimensions.getValue();
+		
 		final int legendHeight = options.isShowLegend() ? ((cellHeight * legendBoxes) + (options.isShowGridlines() ? (legendBoxes + 1) * options.getGridLineWidth() : 0)) : 0 ;
-		final int legendLabelMaxWidth = getMaxStringSize(legendLabels, options.getAxisTitleFont()).getKey();
+		
 		final int legendBoxesWidth = options.isShowLegend() ? (cellWidth + (options.isShowGridlines() ? 2 * options.getGridLineWidth() : 0)) : 0;
 		final int legendWidth = options.isShowLegend() ? (legendBoxesWidth + options.getLabelPadding() + legendLabelMaxWidth) : 0;
 		
 		//Calculate the X positional values of all of the elements first
 		final int yAxisTitleStartPosX = options.getOutsidePadding() + (!yAxis.getTitle().isEmpty() ? yTitleDimensions.getValue() : 0);
-		final int yAxisLabelStartPosX = yAxisTitleStartPosX + (!yAxis.getTitle().isEmpty() ? options.getLabelPadding()*2 : 0);
-		final int matrixStartPosX = yAxisLabelStartPosX + (options.isShowYAxisLabels() ? yAxisLabelMaxWidth + options.getLabelPadding() : 0);
+		final int yAxisLabelStartPosX = yAxisTitleStartPosX + (!yAxis.getTitle().isEmpty() ? options.getAxisTitlePadding() : 0);
+		final int matrixStartPosX = yAxisLabelStartPosX + (options.isShowYAxisLabels() ? (yAxisLabelMaxWidth + options.getLabelPadding()) : 0);
 		final int matrixWidth = (xAxis.getCount()  * cellWidth) + (options.isShowGridlines() ? (xAxis.getCount() + 1) * options.getGridLineWidth() : 0);
 		final int matrixCentreX =  matrixStartPosX + (matrixWidth/2);
 		final int xAxisLabelStartPosX = matrixStartPosX + (options.isShowGridlines() ? options.getGridLineWidth() : 0);
@@ -174,18 +192,30 @@ public class HeatMap {
         
 		//Now that we know the chart title height, we can calculate the Y positional values
         final int chartTitleStartPosY = options.getOutsidePadding();
-		final int xAxisTitleStartPosY = chartTitleStartPosY + (!title.isEmpty() ? chartTitleHeight + options.getHeatMapTitlePadding() : 0) + (!xAxis.getTitle().isEmpty() ? xTitleDimensions.getValue() : 0); //Label positions are bottom left!!
-		final int xAxisLabelStartPosY = xAxisTitleStartPosY + (!xAxis.getTitle().isEmpty() ? options.getLabelPadding()*2 : 0) + (options.isShowXAxisLabels() ? xAxisLabelHeight : 0);
-		final int matrixStartPosY = xAxisLabelStartPosY + (options.isShowXAxisLabels() ? options.getLabelPadding() : 0);
+		final int xAxisTitleStartPosY = chartTitleStartPosY + (!title.isEmpty() ? chartTitleHeight + options.getHeatMapTitlePadding() : 0) + (!xAxis.getTitle().isEmpty() ? xTitleDimensions.getValue() : 0); //Text positions are bottom left!!
+		int xAxisLabelStartPosY = xAxisTitleStartPosY + (!xAxis.getTitle().isEmpty() ? options.getAxisTitlePadding() : 0) + ((options.isShowXAxisLabels() && !options.isxAxisLabelsBelow()) ? xAxisLabelHeight : 0);
+		final int matrixStartPosY = xAxisLabelStartPosY + ((options.isShowXAxisLabels() && !options.isxAxisLabelsBelow()) ? options.getLabelPadding() : 0);
 		final int matrixHeight = (yAxis.getCount()  * cellHeight) + (options.isShowGridlines() ? (yAxis.getCount() + 1) * options.getGridLineWidth() : 0);
 		final int matrixCentreY =  matrixStartPosY + (matrixHeight/2);
 		final int yAxisLabelStartPosY = matrixStartPosY + (options.isShowGridlines() ? options.getGridLineWidth() : 0);
 		final int legendStartPosY = (matrixHeight>=legendHeight) ? (matrixCentreY - (legendHeight/2)) : matrixStartPosY; //Legend is centred with the Matrix only if the matrix is big enough
-		final int legendLabelStartPosY = legendStartPosY + basicFontHeight + (basicFontHeight/4) + (options.isShowGridlines() ? options.getGridLineWidth() : 0); //Label positions are bottom left!!
+		final int legendLabelStartPosY = legendStartPosY + (int)(legendLabelHeight*0.75) + (options.isShowGridlines() ? options.getGridLineWidth() : 0); //Label positions are bottom left!! 1/4 font fudge factor
+		
+		//This part is a bit complicated. If the x-axis labels are rendered at the bottom then we need to recalculate xAxisLabelStartPosY,
+		//This will be different if the axis labels are rotated because they need to be aligned vertically at the top. 
+		//So the Y offset, which is measured from the bottom, will be different for every label when rotated.
+		if(options.isShowXAxisLabels() && options.isxAxisLabelsBelow()) {
+			final int bottomOfChartY = matrixStartPosY + matrixHeight + options.getLabelPadding(); //Don't forget the padding
+			if(rotateXLabels) {
+				xAxisLabelStartPosY = bottomOfChartY; //We will add the text length for each label before rendering it
+			} else {
+				xAxisLabelStartPosY = bottomOfChartY + (int)(axisLabelFontHeight*0.75); //Text is drawn from the bottom corner, 3/4 fudge factor
+			}
+		}
 		
         //Finally, we can figure out the overall image height
         //Outside padding + big title + title padding + X Axis Title + label padding + X Axis Labels + label padding + chart height + outside padding
-        final int imageHeight = matrixStartPosY + Math.max(matrixHeight, legendHeight) + options.getOutsidePadding();
+        final int imageHeight = matrixStartPosY + Math.max(matrixHeight, legendHeight) + ((options.isShowXAxisLabels() && options.isxAxisLabelsBelow()) ? (options.getLabelPadding() + xAxisLabelHeight): 0) + options.getOutsidePadding();
         
         BufferedImage heatmapImage = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = heatmapImage.createGraphics();
@@ -227,8 +257,8 @@ public class HeatMap {
 	        //Render the legend if needed
 	        if (options.isShowLegend()) {
 	        	//Reset to a decent basic font
-		        g2d.setFont(options.getBasicFont());
-		        g2d.setColor(options.getBasicFontColour());
+		        g2d.setFont(options.getLegendLabelFont());
+		        g2d.setColor(options.getLegendLabelFontColour());
 		        
 		        //Render the legend labels
 	    		//The number of legend boxes may be greater than the number of labels
@@ -299,8 +329,8 @@ public class HeatMap {
 	    	}
     		
     		//Will will need to determine the width of each label individually using fontMetrics
-    		g2d.setFont(options.getBasicFont());
-    		g2d.setColor(options.getBasicFontColour());
+    		g2d.setFont(options.getAxisLabelFont());
+    		g2d.setColor(options.getAxisLabelFontColour());
 	    	FontMetrics labelFontMetrics = g2d.getFontMetrics(); //Font is different between titles and labels
 	    	
 	    	if(options.isShowXAxisLabels()) {
@@ -310,8 +340,9 @@ public class HeatMap {
 	    			if(rotateXLabels) {
 		    			//Store the current transform
 		    			transform = g2d.getTransform();
-		    			final int cellOffsetX = xAxisLabelStartPosX + (entry.getValue() * cellWidth) + (options.isShowGridlines() ? entry.getValue()*options.getGridLineWidth() : 0) + halfCellWidth + (basicFontHeight/4);
-		    			g2d.translate(cellOffsetX, xAxisLabelStartPosY);
+		    			final int cellOffsetX = xAxisLabelStartPosX + (entry.getValue() * cellWidth) + (options.isShowGridlines() ? entry.getValue()*options.getGridLineWidth() : 0) + halfCellWidth + (int)(axisLabelFontHeight*0.25);
+		    			//Need to align vertically at the top if the labels are drawn below the matrix
+		    			g2d.translate(cellOffsetX, xAxisLabelStartPosY + (options.isxAxisLabelsBelow() ? labelFontMetrics.stringWidth(entry.getKey()) : 0)); 
 		    			g2d.rotate(-Math.PI / 2); // Rotate 90 degrees counter-clockwise
 		    			
 		    			// Draw the x axis label
@@ -328,10 +359,11 @@ public class HeatMap {
 	    	}
 	    	
 	    	if(options.isShowYAxisLabels()) {
-	    		//Add all of the y labels, drawn horizontally
+	    		//Add all of the Y labels, drawn horizontally
+	    		final int labelVerticalOffset = (int)(axisLabelFontHeight*0.25);
 	    		for (Entry<String, Integer> entry : yAxis.getLabelIndices().entrySet()) {
 	    			final int labelWidth = labelFontMetrics.stringWidth(entry.getKey());
-	    			final int cellOffsetY = yAxisLabelStartPosY + (basicFontHeight/4) + (entry.getValue() * cellHeight) + (options.isShowGridlines() ? entry.getValue()*options.getGridLineWidth() : 0) + halfCellHeight;
+	    			final int cellOffsetY = yAxisLabelStartPosY + labelVerticalOffset + (entry.getValue() * cellHeight) + (options.isShowGridlines() ? entry.getValue()*options.getGridLineWidth() : 0) + halfCellHeight;
 	    			//Aligned right
 	    			g2d.drawString(entry.getKey(), yAxisLabelStartPosX + (yAxisLabelMaxWidth - labelWidth), cellOffsetY);
 	    		}
@@ -412,9 +444,40 @@ public class HeatMap {
     			}
     		}
     		
+    		//Draw the grid values, if needed
+    		if(options.isShowGridValues()) {
+    			g2d.setColor(options.getGridValuesFontColour()); //Reset back to grid line colour! The last colour was from the matrix.
+    			g2d.setFont(options.getGridValuesFont());
+    			FontMetrics valueFontMetrics = g2d.getFontMetrics();
+  
+    			final int textVerticalOffset = (int) (valueFontMetrics.getHeight()*0.25);
+    			int gridValIndex = 0;
+    			for (DataRecord record: data) {
+    				final String val = dataValues.get(gridValIndex);
+    				if(!"".equals(val)) {
+    					final int x = xAxis.getIndex(record.getX());
+            			final int y = yAxis.getIndex(record.getY());
+        				
+        				final int matrixCellOffsetX = options.isShowGridlines() ?  x * (cellWidth  + options.getGridLineWidth()) : x * cellWidth;
+        				final int matrixCellOffsetY = options.isShowGridlines() ?  y * (cellHeight + options.getGridLineWidth()) : y * cellHeight;
+        				
+        				final int matrixBoxPosX = matrixStartPosX + (options.isShowGridlines() ? options.getGridLineWidth() : 0) + matrixCellOffsetX;
+            			final int matrixBoxPosY = matrixStartPosY + (options.isShowGridlines() ? options.getGridLineWidth() : 0) + matrixCellOffsetY;
+            			
+            			final int textWidth = valueFontMetrics.stringWidth(val);
+            			final int textPosX = matrixBoxPosX + halfCellWidth - (textWidth/2); // Centre the text in the X dimension
+            			final int textPosY = matrixBoxPosY + halfCellHeight + textVerticalOffset;
+            					
+	    				g2d.drawString(val, textPosX, textPosY);
+    				}
+        			
+    				gridValIndex++;
+    			}
+    		}
+    		
     		//Draw the grid lines
 			if(options.isShowGridlines()) {
-				g2d.setColor(options.getGridLineColour()); //Reset back to grid line colour! The last colour was from the matrix.
+				g2d.setColor(options.getGridLineColour()); //Reset back to grid line colour! The last colour was from the matrix or gid values.
 				for(int y = 0; y <= yAxis.getCount(); y++) { //Y grid lines
 					final int matrixOffsetY = y * (cellHeight + options.getGridLineWidth());
 					g2d.fillRect(matrixStartPosX, matrixStartPosY + matrixOffsetY , matrixWidth, options.getGridLineWidth()); // Top line of each row
