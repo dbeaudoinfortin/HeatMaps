@@ -12,7 +12,7 @@ Add the following to your `pom.xml`:
 <dependency>
   <groupId>io.github.dbeaudoinfortin</groupId>
   <artifactId>heatmaps</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.3</version>
 </dependency>
 ```
 
@@ -67,37 +67,87 @@ Two options are provided for defining the chart axes: `IntegerAxis` which is use
 
 ```java
 IntegerAxis xAxis = new IntegerAxis("Days of the Year", 1, 366);
-StringAxis yAxis = new StringAxis("Weird Cars", "BMC Landcrab", "Ford Probe", "Renault LeCar", "Subaru Brat", "Ferrari LaFerrari");
+StringAxis  yAxis = new StringAxis("Weird Cars", "BMC Landcrab", "Ford Probe", "Renault LeCar", "Subaru Brat", "Ferrari LaFerrari");
 ```
 
 ## Examples
 
 <p align="center">
+  <img src="https://github.com/user-attachments/assets/373d0966-0c9a-4739-b014-c8b2ddf6c1e6" width="400" />
+  <img src="https://github.com/user-attachments/assets/2ce8e484-b4ab-429a-8c59-d2b79cd66107" width="400" />
   <img src="https://github.com/user-attachments/assets/00434021-e13b-4797-b5cb-4e236c591a29" width="800" />
   <img src="https://github.com/user-attachments/assets/b814eb8f-5e93-4184-a764-a91d6f990880" width="400" />
   <img src="https://github.com/user-attachments/assets/650c4387-c5b4-4005-ad42-3c344b5436ba" width="400" />
-  <img src="https://github.com/user-attachments/assets/373d0966-0c9a-4739-b014-c8b2ddf6c1e6" width="400" />
 </p>
 
 ## Customization Options
 
 The heat maps are highly customizable, down to colours, fonts, gradients, titles, layout, etc. The following customization options are provided out of the box:
 
-**Titles, Labels, Legend**
-- Option to display titles for the X-axis, Y-axis, and the overall chart.
-- Custom fonts and colours for all titles
-- Option to display labels for the X-axis and Y-axis
-- Custom fonts and colours for the axis labels
-- Option to display a legend, with custom upper and lower bounds and custom number formatting
-- Custom padding between all the elements (titles, labels, legend, etc.) 
-
 **Heat Map Rendering**
 - Custom colour gradients using either pre-defined steps with linear interpolation, or smooth a smooth gradient based on the HSB model colour wheel
 - 9 pre-defined gradients to choose from if you don't want to define your own
 - Option to blend the colours of each cell using a custom scale factor for applying the linear colour interpolation 
-- Custom background colour
-- Option to render of grid lines, including thickness and colour
-- Cell width and height
+- Custom background colours
+- Option to render grid lines, including customizating the thickness and colour
+- Option to print data values on top of the heat map, with custom formatting, font, and colour
+- Custom cell width and height
+- Custom padding between all the elements (titles, labels, legend, etc.)
+
+**Titles & Labels**
+- Option to display titles for the X-axis, Y-axis, and the overall chart
+- Custom fonts and colours for all titles
+- Option to display labels for the X-axis and Y-axis
+- Custom fonts and colours for the axis labels
+- Labels for the x-axis can rotated and can be rendered either above or below the heat map
+
+**Legend**
+- Option to display a legend
+- Custom custom upper and lower bounds
+- Custom number formatting for legend labels
+- Custom fonts and colours for the legend labels
+- Configurable number of discrete colour steps
+
+All of these options can be set in the `HeatMapOptions` class. The following table summarizes all the possible configuration options.
+
+|Option|Default Value|Description|
+|-|-|-|
+|backgroundColour|White, unless it conflicts with the colour gradient, then grey.|The background colour of the whole chart|
+|cellWidth|50px|The desired cell width. May be enlarged if it's too small to fit the labels.|
+|cellHeight|50px|The desired cell width. May be enlarged if it's too small to fit the labels.|
+|showGridlines|-|-|
+|gridLineWidth|-|-|
+|gridLineColour|-|-|
+|showXAxisLabels|-|-|
+|xAxisLabelsBelow|-|-|
+|xAxisLabelsRotate|-|-|
+|showYAxisLabels|-|-|
+|axisLabelFont|-|-|
+|axisLabelFontColour|-|-|
+|axisTitleFont|-|-|
+|heatMapTitleFont|-|-|
+|axisTitleFontColour|-|-|
+|heatMapTitleFontColour|-|-|
+|showGridValues|-|-|
+|gridValuesFormat|-|-|
+|gridValuesFont|-|-|
+|gridValuesFontColour|-|-|
+|blendColours|-|-|
+|blendColoursScale|-|-|
+|axisLabelPadding|-|-|
+|axisTitlePadding|-|-|
+|heatMapTitlePadding|-|-|
+|outsidePadding|-|-|
+|legendPadding|-|-|
+|showLegend|-|-|
+|legendTextFormat|-|-|
+|legendLabelFont|-|-|
+|legendLabelFontColour|-|-|
+|legendSteps|-|-|
+|gradient|-|-|
+|colourScaleLowerBound|Automatically calculated based on the lowest data value.|-|
+|colourScaleUpperBound|Automatically calculated based on the highest data value.|-|
+
 
 ## Pre-Defined Heat Map Gradients
 
@@ -137,7 +187,7 @@ Enabling the `blendColours` option will result in a linear colour interpolation 
   <img src="https://github.com/user-attachments/assets/657d4e69-3a81-47a2-84ca-e1bbafcbd57c" width="200" />
 </p>
 
-## How It Works
+## Implementation Details
 
 This library is built from scratch using the Java 2D graphics classes. To make it easy to integrate with your project, there are no external dependencies, only Java 8 or later.
 
