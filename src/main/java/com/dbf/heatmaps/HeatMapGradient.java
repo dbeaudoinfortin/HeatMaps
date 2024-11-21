@@ -218,8 +218,8 @@ public class HeatMapGradient {
 		this.saturation = saturation;
 		this.brightness = brightness;
 		this.clockwise = clockwise;
-		this.hueStart = hueStart/360;
-		this.hueRange = Math.abs(this.hueStart - (hueEnd/360));
+		this.hueStart = hueStart/360f;
+		this.hueRange = Math.abs(this.hueStart - (hueEnd/360f));
 	}
 	
 	/**

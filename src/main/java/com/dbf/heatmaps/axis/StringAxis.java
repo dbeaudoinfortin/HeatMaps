@@ -25,6 +25,10 @@ public class StringAxis extends Axis<String> {
 		}
 	}
 	
+	public void addEntry(String entry) {
+		super.addEntry(entry, entry);
+	}
+	
 	@Override
 	public String getLabel(String entry) {
 		return entry;

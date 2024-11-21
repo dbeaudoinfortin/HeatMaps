@@ -31,7 +31,7 @@ HeatMap.builder()
 ```
 The output will be a PNG file at the output path of `myOutPutFile`.
 
-The builder pattern makes it easy to customize your heat map. For example, the following will render a heatmap with no titles, no labels, no legend no border, just the core heat map with blending enabled:
+The builder pattern makes it easy to customize your heat map. For example, the following will render a heat map with no titles, no labels, no legend no border, just the core heat map with blending enabled:
 
 ```java
 HeatMap.builder()
@@ -63,7 +63,7 @@ public interface DataRecord {
 }
 ```
 
-Two options are provided for defining the chart axes: `IntegerAxis` which is useful integer values (such as 1-31 for days of the month) and `StringAxis` which is useful for string values (such as Monday-Sunday for days of the week). In both cases, the axis entries are always treated as discrete values and rendered in the same order that each entry is added to the axis. For the `IntegerAxis`, a convenience method is provided to automatically populate the values between a given minimum and maxmimum. For example:
+Two options are provided for defining the chart axes: `IntegerAxis` which is useful integer values (such as 1-31 for days of the month) and `StringAxis` which is useful for string values (such as Monday-Sunday for days of the week). In both cases, the axis entries are always treated as discrete values and rendered in the same order that each entry is added to the axis. For the `IntegerAxis`, a convenience method is provided to automatically populate the values between a given minimum and maximum. For example:
 
 ```java
 IntegerAxis xAxis = new IntegerAxis("Days of the Year", 1, 366);
@@ -96,7 +96,7 @@ The heat maps are highly customizable, down to colours, fonts, gradients, titles
 **Heat Map Rendering**
 - Custom colour gradients using either pre-defined steps with linear interpolation, or smooth a smooth gradient based on the HSB model colour wheel
 - 9 pre-defined gradients to choose from if you don't want to define your own
-- Option to blend the colours of each cell using a custome scale factor for applying the linear colour interpolation 
+- Option to blend the colours of each cell using a custom scale factor for applying the linear colour interpolation 
 - Custom background colour
 - Option to render of grid lines, including thickness and colour
 - Cell width and height
@@ -129,7 +129,8 @@ The default colour palette, if not specified, is set to number 3. Here are examp
 
 ## Colour Blending
 
-Enabling the `blendColours` option will result in a linear colour interpolation being applied to the cells of the heat map in order to "smooth" out the values. This effect works by first rendering each cell as a single pixel, then applying a bilinear upscaler (with a variable scaling factor), followed by applying an alpha mask to avoid blending with empty cells, and finally applying a nearest-neighbour up or down scaling to the final output resolution. The strength of this effect can be controlled via the `blendColoursScale` option, which supports values between 2 and 20, inclusive. Here is an example of what colour blending looks like, starting with no effect, then a strength of 2, 3, 5,and 10, respectively.
+Enabling the `blendColours` option will result in a linear colour interpolation being applied to the cells of the heat map in order to "smooth out" the values. This effect works by first rendering each cell as a single pixel, then applying a bilinear upscaler (with a variable scaling factor), followed by applying an alpha mask to avoid blending with empty cells, and finally applying a nearest-neighbour up or down scaling to the final output resolution. The strength of this effect can be controlled via the `blendColoursScale` option, which supports values between 2 and 20, inclusive. Here is an example of what colour blending looks like, starting with no effect, then a strength of 2, 3, 5,and 10, respectively.
+
 <p align="center">
   <img src="https://github.com/user-attachments/assets/f64e9520-7f8b-4473-be04-34be30771b69" width="200" />
   <img src="https://github.com/user-attachments/assets/1b3cdab1-97a9-4e4a-9f47-670644505911" width="200" />
