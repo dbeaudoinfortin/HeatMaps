@@ -121,6 +121,10 @@ The default colour palette, if not specified, is set to number 3. Here are examp
 ![Gradient_3](https://github.com/user-attachments/assets/b9402f99-a82d-4163-8d27-4be4eef6812c)
 ![Gradient_4](https://github.com/user-attachments/assets/b582757d-824a-4f61-8410-8451b158e1ad)
 ![Gradient_5](https://github.com/user-attachments/assets/4d9c962d-33bd-4de8-86b7-77e55506312c)
+![Gradient_6](https://github.com/user-attachments/assets/8ccccdc7-25fe-4847-8bbd-76e34c9a8af4)
+![Gradient_7](https://github.com/user-attachments/assets/54b074bc-b101-4813-a54c-db6030c81c4a)
+![Gradient_8](https://github.com/user-attachments/assets/397e97b8-8b01-4261-bd44-16aa1614667b)
+![Gradient_9](https://github.com/user-attachments/assets/b8ac0f6a-7481-4851-9f3b-b229a4c5f059)
 
 
 ## Colour Blending
