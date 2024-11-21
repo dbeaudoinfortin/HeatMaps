@@ -1,13 +1,12 @@
 # HeatMaps
 
-Easily create beautiful custom heat maps in only a few lines of Java code. 
+Easily create beautiful custom heat maps in only a few lines of Java code!
 
 I orginally developed this code for the [NAPS Data Analysis Toolbox](https://github.com/dbeaudoinfortin/NAPSDataAnalysis) and now I have spun it out into its own project so others can also benefit from it.
 
+## Getting Started
 
-## How To Use
-
-Add the following to your pom.xml:
+Add the following to your `pom.xml`:
 
 ```xml
 <dependency>
@@ -17,7 +16,7 @@ Add the following to your pom.xml:
 </dependency>
 ```
 
-And invoke the HeatMap rendering by calling the rend() method:
+Customize your heat map using the builder class and render it by calling `HeatMap.render()`:
 
 ```java
 HeatMap.builder()
@@ -30,8 +29,46 @@ HeatMap.builder()
   .build()
   .render(myOutPutFile, myDataRecords);
 ```
+The output will be a PNG file at the output path of `myOutPutFile`.
 
-(More documentation coming soon.)
+The builder pattern makes it easy to customize the your heat map. For example, the following will render a heatmap with no titles, no labels, no legend no border, just the core heat map with blending enabled:
+
+```java
+HeatMap.builder()
+  .withTitle("")
+  .withXAxis(xAxis)
+  .withYAxis(yAxis)
+  .withOptions(HeatMapOptions.builder()
+    .withShowLegend(false)
+    .withShowXAxisLabels(false)
+    .withShowYAxisLabels(false)
+    .withOutsidePadding(0)
+    .withBlendColours(true)
+    .withBlendColoursScale(5)
+    .withColourScaleLowerBound(5)
+    .withColourScaleUpperBound(20)
+    .withGradient(HeatMapGradient.getCannedGradient(5)
+    .build())
+  .build()
+  .render(myOutPutFile, myDataRecords);
+```
+
+The data is passed in as a `Collection<DataRecord>`. You can either use your own pojo and implement the interface `com.dbf.heatmaps.data.DataRecord` or use the provided `com.dbf.heatmaps.data.BasicDataRecord` pojo class. The interface is very simple:
+
+```java
+public interface DataRecord {
+  public Double getValue();
+  public Object getX();
+  public Object getY();
+}
+```
+
+Two options are provided for defining the chart axes: `IntegerAxis` which is useful integer values (such as 1-31 for days of the month) and `StringAxis` which is useful for string values (such as Monday-Sunday for days of the week). In both cases, the axis entries are always treated as discrete values and rendered in the same order that each entry is added to the axis. For the `IntegerAxis`, a convenience method is provided to automatically populate the values between a given minimum and maxmimum. For example:
+
+```java
+IntegerAxis xAxis = new IntegerAxis("Days of the Year", 1, 366);
+StringAxis yAxis = new StringAxis("Weird Cars", "BMC Landcrab", "Ford Probe", "Renault LeCar", "Subaru Brat", "Ferrari LaFerrari");
+```
 
 ## Examples
 
@@ -46,9 +83,48 @@ HeatMap.builder()
 
 ## Customization Options
 
-The heat maps are highly customizable, down to the colour, fonts, gradients, titles, layout, etc.
+The heat maps are highly customizable, down to colours, fonts, gradients, titles, layout, etc. The following customization options are provided out of the box:
 
-(Documentation coming soon.)
+**Titles, Labels, Legend**
+- Option to display titles for the X-axis, Y-axis, and the overall chart.
+- Custom fonts and colours for all titles
+- Option to display labels for the X-axis and Y-axis
+- Custom fonts and colours for the axis labels
+- Option to display a legend, with custom upper and lower bounds and custom number formatting
+- Custom padding between all the elements (titles, labels, legend, etc.) 
+
+**Heat Map Rendering**
+- Custom colour gradients using either pre-defined steps with linear interpolation, or smooth a smooth gradient based on the HSB model colour wheel
+- 9 pre-defined gradients to choose from if you don't want to define your own
+- Option to blend the colours of each cell using a custome scale factor for applying the linear colour interpolation 
+- Custom background colour
+- Option to render of grid lines, including thickness and colour
+- Cell width and height
+
+## Pre-Defined Heat Map Gradients
+
+There are 9 pe-defined gradients to choose from. I plan to eventually add more in the future. The current palettes are the following:
+1. A smooth gradient based on the colour wheel from blue to red. All the of the colours are fully saturated.
+2. A 12 step gradient from blue to red with less saturation than the first colour palette.
+3. A simplified 5 step gradient from blue to red.
+4. A two colour gradient from blue to red, with purple mixed in-between.
+5. A 5 step colour blind friendly gradient of greenish-yellow to dark orange.
+6. A 3 step black-red-orange gradient, similar to black-body radiation, up to approximately 1300 degrees kelvin.
+7. Same as number 6 but two more steps are added to extend the scale up to approximately 6500k degrees kelvin.
+8. A 50 step colour gradient based on [Dave Green's ‘cubehelix’ colour scheme](https://people.phy.cam.ac.uk/dag9/CUBEHELIX/)
+9. A 2 step grey-scale gradient that should be used for non-colour screen/print-outs.
+
+The default colour palette, if not specified, is set to number 3. Here are examples of what the colour palette look like, in order:
+
+## Colour Blending
+
+Enabling the `blendColours` option will result in a linear colour interpolation being applied to the cells of the heat map in order to "smooth" out the values. This effect works by first rendering each cell as a single pixel, then applying a bilinear upscaler (with a variable scaling factor), followed by applying an alpha mask to avoid blending with empty cells, and finally applying a nearest-neighbour up or down scaling to the final output resolution. The strength of this effect can be controlled via the `blendColoursScale` option, which supports values between 2 and 20, inclusive. Here is an example of what colour blending looks like, starting with no effect, then a strength of 2, 3, 5,and 10, respectively.
+
+![No Blending](https://github.com/user-attachments/assets/f64e9520-7f8b-4473-be04-34be30771b69)
+![Blend Scale 2](https://github.com/user-attachments/assets/1b3cdab1-97a9-4e4a-9f47-670644505911)
+![Blend Scale 3](https://github.com/user-attachments/assets/6ecc18c4-0482-4f50-ad7d-a1f0d5dbf9f7)
+![Blend Scale 5](https://github.com/user-attachments/assets/259f2575-b1f9-4aa1-9962-969fa3b6ed7c)
+![Blend Scale 10](https://github.com/user-attachments/assets/657d4e69-3a81-47a2-84ca-e1bbafcbd57c)
 
 ## How It Works
 
