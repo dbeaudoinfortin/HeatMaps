@@ -31,7 +31,7 @@ HeatMap.builder()
 ```
 The output will be a PNG file at the output path of `myOutPutFile`.
 
-The builder pattern makes it easy to customize the your heat map. For example, the following will render a heatmap with no titles, no labels, no legend no border, just the core heat map with blending enabled:
+The builder pattern makes it easy to customize your heat map. For example, the following will render a heatmap with no titles, no labels, no legend no border, just the core heat map with blending enabled:
 
 ```java
 HeatMap.builder()
@@ -115,6 +115,13 @@ There are 9 pe-defined gradients to choose from. I plan to eventually add more i
 9. A 2 step grey-scale gradient that should be used for non-colour screen/print-outs.
 
 The default colour palette, if not specified, is set to number 3. Here are examples of what the colour palette look like, in order:
+
+![Gradient_1](https://github.com/user-attachments/assets/5752f84b-8e6c-4164-9631-1f0430230471)
+![Gradient_2](https://github.com/user-attachments/assets/bdcd777e-2dda-4a1b-94b0-8cb113a59ac0)
+![Gradient_3](https://github.com/user-attachments/assets/b9402f99-a82d-4163-8d27-4be4eef6812c)
+![Gradient_4](https://github.com/user-attachments/assets/b582757d-824a-4f61-8410-8451b158e1ad)
+![Gradient_5](https://github.com/user-attachments/assets/4d9c962d-33bd-4de8-86b7-77e55506312c)
+
 
 ## Colour Blending
 
