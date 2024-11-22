@@ -112,39 +112,39 @@ All of these options can be set in the `HeatMapOptions` class. The following tab
 
 |Option|Default Value|Description|
 |-|-|-|
-|backgroundColour|White, unless it conflicts with the colour gradient, then grey.|The background colour of the whole chart.|
-|cellWidth|50px|The desired cell width in pixels. Will be enlarged if it's too small to fit the labels.|
-|cellHeight|50px|The desired cell width in pixels . Will be enlarged if it's too small to fit the labels.|
+|backgroundColour|White, unless it conflicts with the colour gradient, then grey.|Sets the background colour of the whole chart.|
+|cellWidth|50px|Sets the desired cell width in pixels. Will be enlarged if it's too small to fit the labels.|
+|cellHeight|50px|Sets the desired cell width in pixels . Will be enlarged if it's too small to fit the labels.|
 |showGridlines|false|Toggles the rendering of grid lines on the heat map between the cells.|
-|gridLineWidth|1px|The width, in pixels, of the grid lines.|
-|gridLineColour|Black|The colour of the grid lines.|
+|gridLineWidth|1px|Sets the width, in pixels, of the grid lines.|
+|gridLineColour|Black|Sets the colour of the grid lines.|
 |showXAxisLabels|true|Toggles the rendering of the labels for the X-axis.|
 |xAxisLabelsBelow|false|Toggles the rendering of the X-axis labels below the heat map instead of above.|
 |xAxisLabelsRotate|false|Forces the X-axis labels to be rotated 90 degrees and rendered vertically. Otherwise, the X-axis labels will be automatically rotated if they are bigger than the cell width. When the labels are rendered above the heat map they are vertically aligned to the bottom, and when they are rendered below the heat map they are vertically aligned to the top.|
 |showYAxisLabels|true|Toggles the rendering of the labels for the Y-axis.
-|axisLabelFont|Calibri, Plain, 20pts|The font used to render the X-axis and Y-axis labels.|
-|axisLabelFontColour|Black|The colour used to render the X-axis and Y-axis labels.|
-|axisTitleFont|Calibri, Bold, 20pts|The font used to render the X-axis and Y-axis titles.|
-|axisTitleFontColour|Black|The colour used to render the X-axis and Y-axis titles.|
-|heatMapTitleFont|Calibri, Bold, 36pts|The font used to render the overall chart title.|
-|heatMapTitleFontColour|Black|The colour used to render the overall chart title.|
+|axisLabelFont|Calibri, Plain, 20pts|Sets the font used to render the X-axis and Y-axis labels.|
+|axisLabelFontColour|Black|Sets the colour used to render the X-axis and Y-axis labels.|
+|axisTitleFont|Calibri, Bold, 20pts|Sets the font used to render the X-axis and Y-axis titles.|
+|axisTitleFontColour|Black|Sets the colour used to render the X-axis and Y-axis titles.|
+|heatMapTitleFont|Calibri, Bold, 36pts|Sets the font used to render the overall chart title.|
+|heatMapTitleFontColour|Black|Sets the colour used to render the overall chart title.|
 |showGridValues|false|Toggles the rendering of the values within each cell of the heat map.|
-|gridValuesFormat|0.#|The decimal format used to display the values within each cell of the heat map. The `Double` to `String` conversion makes use of the Java `DecimalFormat` class.|
-|gridValuesFont|Calibri, Plain, 20pts|The font used to render the values within each cell of the heat map.|
-|gridValuesFontColour|Black|The colour used to render the values within each cell of the heat map.|
+|gridValuesFormat|0.#|Sets the decimal format used to display the values within each cell of the heat map. The `Double` to `String` conversion makes use of the Java `DecimalFormat` class.|
+|gridValuesFont|Calibri, Plain, 20pts|Sets the font used to render the values within each cell of the heat map.|
+|gridValuesFontColour|Black|Sets the colour used to render the values within each cell of the heat map.|
 |blendColours|false|Toggles the blending of colours between adjacent cells of the heat map grid. See the [section below](#colour_blending) for details on how this works.|
-|blendColoursScale|3|The amount of blending to apply. This corresponds to the scaling factor of the bilinear interpolation, essentially how "smooth" the result will be. See the [section below](#colour_blending) for details on how this works.|
-|axisLabelPadding|10px|The amount of blank space (padding), in pixels, between the X-axis and Y-axis labels and the heat map grid.|
-|axisTitlePadding|20px|The amount of blank space (padding), in pixels, below (for the X-axis) and to the right (for the Y-axis) of the axis titles.|
-|heatMapTitlePadding|40px|The amount of blank space (padding), in pixels, below the overall chart title.|
-|outsidePadding|5px|The amount of blank space (padding), in pixels, on the perimeter of the entire chart.|
-|legendPadding|40px|The amount of blank space (padding), in pixels, between the legend and the heat map grid.|
+|blendColoursScale|3|Sets the amount (strength) of blending to use. This corresponds to the scaling factor of the bilinear interpolation, essentially how "smooth" the result will be. See the [section below](#colour_blending) for details on how this works.|
+|axisLabelPadding|10px|Sets the amount of blank space (padding), in pixels, between the X-axis and Y-axis labels and the heat map grid.|
+|axisTitlePadding|20px|Sets the amount of blank space (padding), in pixels, below (for the X-axis) and to the right (for the Y-axis) of the axis titles.|
+|heatMapTitlePadding|40px|Sets the amount of blank space (padding), in pixels, below the overall chart title.|
+|outsidePadding|5px|Sets the amount of blank space (padding), in pixels, on the perimeter of the entire chart.|
+|legendPadding|40px|Sets the amount of blank space (padding), in pixels, between the legend and the heat map grid.|
 |showLegend|true|Toggles the rendering of the legend, including the legend labels.|
-|legendTextFormat|0.##|The decimal format used to display the values of the legend labels. The `Double` to `String` conversion makes use of the Java `DecimalFormat` class.
-|legendLabelFont|Calibri, Plain, 20pts|The font used to render the legend labels.|
-|legendLabelFontColour|Black|The colour used to render the legend labels.|
-|legendSteps|The greater of the number of cells of the Y-axis and 5|The number of discrete colour steps to include in the legend. The minimum value is 2.|
-|gradient|`HeatMapGradient.BASIC_GRADIENT`|The colour gradient for the heat map. See the [section below](#heat_map_gradients) for details on how this works.|
+|legendTextFormat|0.##|Sets the decimal format used to display the values of the legend labels. The `Double` to `String` conversion makes use of the Java `DecimalFormat` class.
+|legendLabelFont|Calibri, Plain, 20pts|Sets the font used to render the legend labels.|
+|legendLabelFontColour|Black|Sets the colour used to render the legend labels.|
+|legendSteps|The greater of the number of cells of the Y-axis and 5|Sets the number of discrete colour steps to include in the legend. The minimum value is 2.|
+|gradient|`HeatMapGradient.BASIC_GRADIENT`|Sets the colour gradient for the heat map. See the [section below](#heat_map_gradients) for details on how this works.|
 |colourScaleLowerBound|Automatically calculated based on the lowest data value.|Restricts the minimum value (low bound) of the heat map gradient. Any value below this threshold will be assigned the same minimum colour according to the chosen gradient.|
 |colourScaleUpperBound|Automatically calculated based on the highest data value.|Restricts the maximum value (upper bound) of the heat map gradient. Any value above this threshold will be assigned the same maximum colour according to the chosen gradient.|
 
