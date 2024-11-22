@@ -195,7 +195,7 @@ public class HeatMapGradient {
 	 * @param hueStart The starting hue for the colour gradient, in degrees, between zero and 360 (inclusive).
 	 * @param hueEnd The ending hue for the colour gradient, in degrees, between zero and 360 (inclusive).
 	 * @param saturation The saturation of the colours, as a fractional value between zero and one.
-	 * @param brightness The saturation of the colours, as a fractional value between zero and one.
+	 * @param brightness The brightness of the colours, as a fractional value between zero and one.
 	 * @param clockwise Whether the hue should be applied clockwise (true) or counter-clockwise (false).
 	 * 
 	 * @throws IllegalArgumentException if any parameters are outside their allowed range.

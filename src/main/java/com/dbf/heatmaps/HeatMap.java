@@ -110,8 +110,8 @@ public class HeatMap {
 		
 		//When labels are enabled, the cells need to be at least as big as the font height
 		//This is true for the x-axis as  well since at a minimum we can rotate the text
-		int cellWidth  = Math.max(options.getCellWidth(),  options.isShowXAxisLabels() ? axisLabelFontHeight + options.getLabelPadding() : 0);
-		int cellHeight = Math.max(options.getCellHeight(), options.isShowYAxisLabels() ? axisLabelFontHeight + options.getLabelPadding() : 0);
+		int cellWidth  = Math.max(options.getCellWidth(),  options.isShowXAxisLabels() ? axisLabelFontHeight + options.getAxisLabelPadding() : 0);
+		int cellHeight = Math.max(options.getCellHeight(), options.isShowYAxisLabels() ? axisLabelFontHeight + options.getAxisLabelPadding() : 0);
 		
 		//The cells also need to be big enough to display the grid values if we are rendering those
 		if(options.isShowGridValues()) {
@@ -128,7 +128,7 @@ public class HeatMap {
 		boolean rotateXLabels = false;
 		if(options.isShowXAxisLabels()) {
 			//Only rotate the x-axis labels when they are too big
-			rotateXLabels = options.isxAxisLabelsRotate() || ((xAxisLabelHeight ) > (cellWidth + (options.isShowGridlines() ? options.getGridLineWidth() : 0) - options.getLabelPadding()));
+			rotateXLabels = options.isxAxisLabelsRotate() || ((xAxisLabelHeight ) > (cellWidth + (options.isShowGridlines() ? options.getGridLineWidth() : 0) - options.getAxisLabelPadding()));
 			if(!rotateXLabels) {
 				xAxisLabelHeight = xAxisLabelMaxSize.getValue();
 			}
@@ -166,17 +166,17 @@ public class HeatMap {
 		final int legendHeight = options.isShowLegend() ? ((cellHeight * legendBoxes) + (options.isShowGridlines() ? (legendBoxes + 1) * options.getGridLineWidth() : 0)) : 0 ;
 		
 		final int legendBoxesWidth = options.isShowLegend() ? (cellWidth + (options.isShowGridlines() ? 2 * options.getGridLineWidth() : 0)) : 0;
-		final int legendWidth = options.isShowLegend() ? (legendBoxesWidth + options.getLabelPadding() + legendLabelMaxWidth) : 0;
+		final int legendWidth = options.isShowLegend() ? (legendBoxesWidth + options.getAxisLabelPadding() + legendLabelMaxWidth) : 0;
 		
 		//Calculate the X positional values of all of the elements first
 		final int yAxisTitleStartPosX = options.getOutsidePadding() + (!yAxis.getTitle().isEmpty() ? yTitleDimensions.getValue() : 0);
 		final int yAxisLabelStartPosX = yAxisTitleStartPosX + (!yAxis.getTitle().isEmpty() ? options.getAxisTitlePadding() : 0);
-		final int matrixStartPosX = yAxisLabelStartPosX + (options.isShowYAxisLabels() ? (yAxisLabelMaxWidth + options.getLabelPadding()) : 0);
+		final int matrixStartPosX = yAxisLabelStartPosX + (options.isShowYAxisLabels() ? (yAxisLabelMaxWidth + options.getAxisLabelPadding()) : 0);
 		final int matrixWidth = (xAxis.getCount()  * cellWidth) + (options.isShowGridlines() ? (xAxis.getCount() + 1) * options.getGridLineWidth() : 0);
 		final int matrixCentreX =  matrixStartPosX + (matrixWidth/2);
 		final int xAxisLabelStartPosX = matrixStartPosX + (options.isShowGridlines() ? options.getGridLineWidth() : 0);
 		final int legendStartPosX = matrixStartPosX + matrixWidth + (options.isShowLegend() ? options.getLegendPadding() : 0);
-		final int legendLabelStartPosX = legendStartPosX + (options.isShowLegend() ? legendBoxesWidth +  options.getLabelPadding() : 0);
+		final int legendLabelStartPosX = legendStartPosX + (options.isShowLegend() ? legendBoxesWidth +  options.getAxisLabelPadding() : 0);
 		
 		//Calculate the overall image width
 		//Outside padding + Y Axis Title + label padding + Y Axis Labels + label padding + chart width + legend padding + legend width + outside padding
@@ -194,7 +194,7 @@ public class HeatMap {
         final int chartTitleStartPosY = options.getOutsidePadding();
 		final int xAxisTitleStartPosY = chartTitleStartPosY + (!title.isEmpty() ? chartTitleHeight + options.getHeatMapTitlePadding() : 0) + (!xAxis.getTitle().isEmpty() ? xTitleDimensions.getValue() : 0); //Text positions are bottom left!!
 		int xAxisLabelStartPosY = xAxisTitleStartPosY + (!xAxis.getTitle().isEmpty() ? options.getAxisTitlePadding() : 0) + ((options.isShowXAxisLabels() && !options.isxAxisLabelsBelow()) ? xAxisLabelHeight : 0);
-		final int matrixStartPosY = xAxisLabelStartPosY + ((options.isShowXAxisLabels() && !options.isxAxisLabelsBelow()) ? options.getLabelPadding() : 0);
+		final int matrixStartPosY = xAxisLabelStartPosY + ((options.isShowXAxisLabels() && !options.isxAxisLabelsBelow()) ? options.getAxisLabelPadding() : 0);
 		final int matrixHeight = (yAxis.getCount()  * cellHeight) + (options.isShowGridlines() ? (yAxis.getCount() + 1) * options.getGridLineWidth() : 0);
 		final int matrixCentreY =  matrixStartPosY + (matrixHeight/2);
 		final int yAxisLabelStartPosY = matrixStartPosY + (options.isShowGridlines() ? options.getGridLineWidth() : 0);
@@ -205,7 +205,7 @@ public class HeatMap {
 		//This will be different if the axis labels are rotated because they need to be aligned vertically at the top. 
 		//So the Y offset, which is measured from the bottom, will be different for every label when rotated.
 		if(options.isShowXAxisLabels() && options.isxAxisLabelsBelow()) {
-			final int bottomOfChartY = matrixStartPosY + matrixHeight + options.getLabelPadding(); //Don't forget the padding
+			final int bottomOfChartY = matrixStartPosY + matrixHeight + options.getAxisLabelPadding(); //Don't forget the padding
 			if(rotateXLabels) {
 				xAxisLabelStartPosY = bottomOfChartY; //We will add the text length for each label before rendering it
 			} else {
@@ -215,7 +215,7 @@ public class HeatMap {
 		
         //Finally, we can figure out the overall image height
         //Outside padding + big title + title padding + X Axis Title + label padding + X Axis Labels + label padding + chart height + outside padding
-        final int imageHeight = matrixStartPosY + Math.max(matrixHeight, legendHeight) + ((options.isShowXAxisLabels() && options.isxAxisLabelsBelow()) ? (options.getLabelPadding() + xAxisLabelHeight): 0) + options.getOutsidePadding();
+        final int imageHeight = matrixStartPosY + Math.max(matrixHeight, legendHeight) + ((options.isShowXAxisLabels() && options.isxAxisLabelsBelow()) ? (options.getAxisLabelPadding() + xAxisLabelHeight): 0) + options.getOutsidePadding();
         
         BufferedImage heatmapImage = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = heatmapImage.createGraphics();
@@ -388,6 +388,7 @@ public class HeatMap {
     	        g2dBilinearMask.setColor(Color.BLACK); //Black means fully opaque
     	        
     	        for (DataRecord record: data) {
+    	        	if(null == record.getValue()) continue; //No data, perfectly valid.
         			//Determine the colour for this pixel of the map
     				final double val = minClamped || maxClamped ? Math.max(Math.min(record.getValue().doubleValue(), maxValue), minValue) : record.getValue().doubleValue();
     				g2dTiny.setColor(options.getGradient().getColour((valueRange == 0 ? 1.0 : (val-minValue) / valueRange)));
@@ -428,6 +429,8 @@ public class HeatMap {
     		} else {
     			//Draw the heat map itself, normally. No scaling trickery, this is much simpler.
         		for (DataRecord record: data) {
+        			if(null == record.getValue()) continue; //No data, perfectly valid.
+        			
         			final int x = xAxis.getIndex(record.getX());
         			final int y = yAxis.getIndex(record.getY());
         			
@@ -556,7 +559,7 @@ public class HeatMap {
         BufferedImage tinyImage = new BufferedImage(1, 1, BufferedImage.BITMASK);
         Graphics2D g2d = tinyImage.createGraphics();
         List<Entry<String, Entry<Integer, Integer>>> titleLines = new ArrayList<Entry<String, Entry<Integer, Integer>>>();
-        try {
+        try { //TODO: add support for newline characters to allow the user to add line returns to their titles
         	 g2d.setFont(font);
         	 g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
              FontMetrics fontMetrics = g2d.getFontMetrics();

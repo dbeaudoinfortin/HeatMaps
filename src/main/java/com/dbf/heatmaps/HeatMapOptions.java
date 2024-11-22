@@ -13,6 +13,7 @@ public class HeatMapOptions {
 	
 	/* MAIN CANVAS */
 	private static final Color DEFAULT_GRID_COLOUR = Color.BLACK;
+	
 	private Color backgroundColour;
 	
 	/* CELLS */
@@ -60,7 +61,7 @@ public class HeatMapOptions {
 	private static final int DEFAULT_LEGEND_PADDING = DEFAULT_CHART_TITLE_PADDING;
 	private static final int DEFAULT_OUTSIDE_PADDING = 5;
 	
-	private int labelPadding        = DEFAULT_LABEL_PADDING;
+	private int axisLabelPadding    = DEFAULT_LABEL_PADDING;
 	private int axisTitlePadding    = DEFAULT_AXIS_TITLE_PADDING;
 	private int heatMapTitlePadding = DEFAULT_CHART_TITLE_PADDING;
 	private int outsidePadding      = DEFAULT_OUTSIDE_PADDING;
@@ -102,7 +103,7 @@ public class HeatMapOptions {
 		this.gridValuesFontColour = builder.gridValuesFontColour;
 		this.blendColours = builder.blendColours;
 		this.blendColoursScale = builder.blendColoursScale;
-		this.labelPadding = builder.labelPadding;
+		this.axisLabelPadding = builder.axisLabelPadding;
 		this.axisTitlePadding = builder.axisTitlePadding;
 		this.heatMapTitlePadding = builder.heatMapTitlePadding;
 		this.outsidePadding = builder.outsidePadding;
@@ -130,7 +131,7 @@ public class HeatMapOptions {
 		if(gridLineWidth < 0) throw new IllegalArgumentException("Grid line width cannot be negative.");
 		if(showGridlines && gridLineWidth < 1) throw new IllegalArgumentException("Grid line width must be at least 1 when grid line rendering is enabled.");
 		
-		if(labelPadding < 0) throw new IllegalArgumentException("Label padding cannot be negative.");
+		if(axisLabelPadding < 0) throw new IllegalArgumentException("Label padding cannot be negative.");
 		if(axisTitlePadding < 0) throw new IllegalArgumentException("Axis title padding cannot be negative.");
 		if(heatMapTitlePadding < 0) throw new IllegalArgumentException("Chart title padding cannot be negative.");
 		if(outsidePadding < 0) throw new IllegalArgumentException("Outside padding cannot be negative.");
@@ -186,12 +187,12 @@ public class HeatMapOptions {
 		this.showGridlines = showGridlines;
 	}
 	
-	public int getLabelPadding() {
-		return labelPadding;
+	public int getAxisLabelPadding() {
+		return axisLabelPadding;
 	}
 	
-	public void setLabelPadding(int labelPadding) {
-		this.labelPadding = labelPadding;
+	public void setAxisLabelPadding(int axisLabelPadding) {
+		this.axisLabelPadding = axisLabelPadding;
 	}
 	
 	public int getHeatMapTitlePadding() {
@@ -473,7 +474,7 @@ public class HeatMapOptions {
 		private Color gridValuesFontColour = DEFAULT_FONT_COLOUR;
 		private boolean blendColours = false;
 		private int blendColoursScale = DEFAULT_BLEND_SCALE;
-		private int labelPadding = DEFAULT_LABEL_PADDING;
+		private int axisLabelPadding = DEFAULT_LABEL_PADDING;
 		private int axisTitlePadding = DEFAULT_AXIS_TITLE_PADDING;
 		private int heatMapTitlePadding = DEFAULT_CHART_TITLE_PADDING;
 		private int outsidePadding = DEFAULT_OUTSIDE_PADDING;
@@ -487,11 +488,50 @@ public class HeatMapOptions {
 		private Double colourScaleLowerBound;
 		private Double colourScaleUpperBound;
 
+		private Builder(Builder builder) {
+			this.backgroundColour = builder.backgroundColour;
+			this.cellWidth = builder.cellWidth;
+			this.cellHeight = builder.cellHeight;
+			this.showGridlines = builder.showGridlines;
+			this.gridLineWidth = builder.gridLineWidth;
+			this.gridLineColour = builder.gridLineColour;
+			this.showXAxisLabels = builder.showXAxisLabels;
+			this.showYAxisLabels = builder.showYAxisLabels;
+			this.xAxisLabelsBelow = builder.xAxisLabelsBelow;
+			this.xAxisLabelsRotate = builder.xAxisLabelsRotate;
+			this.axisLabelFont = builder.axisLabelFont;
+			this.axisLabelFontColour = builder.axisLabelFontColour;
+			this.axisTitleFont = builder.axisTitleFont;
+			this.heatMapTitleFont = builder.heatMapTitleFont;
+			this.axisTitleFontColour = builder.axisTitleFontColour;
+			this.heatMapTitleFontColour = builder.heatMapTitleFontColour;
+			this.showGridValues = builder.showGridValues;
+			this.gridValuesFormat = builder.gridValuesFormat;
+			this.gridValuesFont = builder.gridValuesFont;
+			this.gridValuesFontColour = builder.gridValuesFontColour;
+			this.blendColours = builder.blendColours;
+			this.blendColoursScale = builder.blendColoursScale;
+			this.axisLabelPadding = builder.axisLabelPadding;
+			this.axisTitlePadding = builder.axisTitlePadding;
+			this.heatMapTitlePadding = builder.heatMapTitlePadding;
+			this.outsidePadding = builder.outsidePadding;
+			this.legendPadding = builder.legendPadding;
+			this.showLegend = builder.showLegend;
+			this.legendTextFormat = builder.legendTextFormat;
+			this.legendLabelFont = builder.legendLabelFont;
+			this.legendLabelFontColour = builder.legendLabelFontColour;
+			this.legendSteps = builder.legendSteps;
+			this.gradient = builder.gradient;
+			this.colourScaleLowerBound = builder.colourScaleLowerBound;
+			this.colourScaleUpperBound = builder.colourScaleUpperBound;
+		}
+
 		private Builder() {
 		}
 
 		/**
 		* Builder method for backgroundColour parameter.
+		* Sets the background colour of the whole chart.
 		* @param backgroundColour field to set
 		* @return builder
 		*/
@@ -502,6 +542,8 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for cellWidth parameter.
+		* Sets the desired cell width in pixels.  Minimum is 1.
+		* Will be enlarged if it's too small to fit the labels.
 		* @param cellWidth field to set
 		* @return builder
 		*/
@@ -512,6 +554,8 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for cellHeight parameter.
+		* Sets the desired cell width in pixels.  Minimum is 1.
+		* Will be enlarged if it's too small to fit the labels.
 		* @param cellHeight field to set
 		* @return builder
 		*/
@@ -522,6 +566,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for showGridlines parameter.
+		* Toggles the rendering of grid lines on the heat map between the cells.
 		* @param showGridlines field to set
 		* @return builder
 		*/
@@ -532,6 +577,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for gridLineWidth parameter.
+		* Sets the width, in pixels, of the grid lines.
 		* @param gridLineWidth field to set
 		* @return builder
 		*/
@@ -542,6 +588,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for gridLineColour parameter.
+		* Sets the colour of the grid lines.
 		* @param gridLineColour field to set
 		* @return builder
 		*/
@@ -552,6 +599,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for showXAxisLabels parameter.
+		* Toggles the rendering of the labels for the X-axis.
 		* @param showXAxisLabels field to set
 		* @return builder
 		*/
@@ -562,6 +610,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for showYAxisLabels parameter.
+		* Toggles the rendering of the labels for the Y-axis.
 		* @param showYAxisLabels field to set
 		* @return builder
 		*/
@@ -572,6 +621,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for xAxisLabelsBelow parameter.
+		* Toggles the rendering of the X-axis labels below the heat map instead of above.
 		* @param xAxisLabelsBelow field to set
 		* @return builder
 		*/
@@ -582,6 +632,10 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for xAxisLabelsRotate parameter.
+		* Forces the X-axis labels to be rotated 90 degrees and rendered vertically.
+		* Otherwise, the X-axis labels will be automatically rotated if they are bigger than the cell width.
+		* When the labels are rendered above the heat map they are vertically aligned to the bottom,
+		* and when they are rendered below the heat map they are vertically aligned to the top.
 		* @param xAxisLabelsRotate field to set
 		* @return builder
 		*/
@@ -592,6 +646,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for axisLabelFont parameter.
+		* Sets the font used to render the X-axis and Y-axis labels.
 		* @param axisLabelFont field to set
 		* @return builder
 		*/
@@ -602,6 +657,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for axisLabelFontColour parameter.
+		* Sets the colour used to render the X-axis and Y-axis labels.
 		* @param axisLabelFontColour field to set
 		* @return builder
 		*/
@@ -612,6 +668,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for axisTitleFont parameter.
+		* Sets the font used to render the X-axis and Y-axis titles.
 		* @param axisTitleFont field to set
 		* @return builder
 		*/
@@ -622,6 +679,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for heatMapTitleFont parameter.
+		* Sets the font used to render the overall chart title.
 		* @param heatMapTitleFont field to set
 		* @return builder
 		*/
@@ -632,6 +690,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for axisTitleFontColour parameter.
+		* Sets the colour used to render the X-axis and Y-axis titles.
 		* @param axisTitleFontColour field to set
 		* @return builder
 		*/
@@ -642,6 +701,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for heatMapTitleFontColour parameter.
+		* Sets the colour used to render the overall chart title.
 		* @param heatMapTitleFontColour field to set
 		* @return builder
 		*/
@@ -652,6 +712,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for showGridValues parameter.
+		* Toggles the rendering of the values within each cell of the heat map.
 		* @param showGridValues field to set
 		* @return builder
 		*/
@@ -662,6 +723,8 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for gridValuesFormat parameter.
+		* Sets the decimal format used to display the values within each cell of the heat map.
+		* The Double to String conversion makes use of the Java DecimalFormat class.
 		* @param gridValuesFormat field to set
 		* @return builder
 		*/
@@ -672,6 +735,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for gridValuesFont parameter.
+		* Sets the font used to render the values within each cell of the heat map.
 		* @param gridValuesFont field to set
 		* @return builder
 		*/
@@ -682,6 +746,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for gridValuesFontColour parameter.
+		* Sets the colour used to render the values within each cell of the heat map.
 		* @param gridValuesFontColour field to set
 		* @return builder
 		*/
@@ -692,6 +757,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for blendColours parameter.
+		* Toggles the blending of colours between adjacent cells of the heat map grid.
 		* @param blendColours field to set
 		* @return builder
 		*/
@@ -702,6 +768,9 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for blendColoursScale parameter.
+		* Sets the amount (strength) of blending to use.
+		* This corresponds to the scaling factor of the bilinear interpolation, essentially how "smooth" the result will be.
+		* Minimum is 2, maximum is 20.
 		* @param blendColoursScale field to set
 		* @return builder
 		*/
@@ -711,17 +780,19 @@ public class HeatMapOptions {
 		}
 
 		/**
-		* Builder method for labelPadding parameter.
-		* @param labelPadding field to set
+		* Builder method for axisLabelPadding parameter.
+		* 	Sets the amount of blank space (padding), in pixels, between the X-axis and Y-axis labels and the heat map grid.
+		* @param axisLabelPadding field to set
 		* @return builder
 		*/
-		public Builder withLabelPadding(int labelPadding) {
-			this.labelPadding = labelPadding;
+		public Builder withAxisLabelPadding(int axisLabelPadding) {
+			this.axisLabelPadding = axisLabelPadding;
 			return this;
 		}
 
 		/**
 		* Builder method for axisTitlePadding parameter.
+		* Sets the amount of blank space (padding), in pixels, below (for the X-axis) and to the right (for the Y-axis) of the axis titles.
 		* @param axisTitlePadding field to set
 		* @return builder
 		*/
@@ -732,6 +803,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for heatMapTitlePadding parameter.
+		* Sets the amount of blank space (padding), in pixels, below the overall chart title.
 		* @param heatMapTitlePadding field to set
 		* @return builder
 		*/
@@ -742,6 +814,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for outsidePadding parameter.
+		* Sets the amount of blank space (padding), in pixels, on the perimeter of the entire chart.
 		* @param outsidePadding field to set
 		* @return builder
 		*/
@@ -752,6 +825,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for legendPadding parameter.
+		* Sets the amount of blank space (padding), in pixels, between the legend and the heat map grid.
 		* @param legendPadding field to set
 		* @return builder
 		*/
@@ -762,6 +836,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for showLegend parameter.
+		* Toggles the rendering of the legend, including the legend labels.
 		* @param showLegend field to set
 		* @return builder
 		*/
@@ -772,6 +847,8 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for legendTextFormat parameter.
+		* Sets the decimal format used to display the values of the legend labels.
+		* The Double to String conversion makes use of the Java DecimalFormat class.
 		* @param legendTextFormat field to set
 		* @return builder
 		*/
@@ -782,6 +859,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for legendLabelFont parameter.
+		* Sets the font used to render the legend labels.
 		* @param legendLabelFont field to set
 		* @return builder
 		*/
@@ -792,6 +870,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for legendLabelFontColour parameter.
+		* Sets the colour used to render the legend labels.
 		* @param legendLabelFontColour field to set
 		* @return builder
 		*/
@@ -802,6 +881,8 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for legendSteps parameter.
+		* Sets the number of discrete colour steps to include in the legend.
+		* The minimum value is 2.
 		* @param legendSteps field to set
 		* @return builder
 		*/
@@ -812,6 +893,7 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for gradient parameter.
+		* Sets the colour gradient for the heat map.
 		* @param gradient field to set
 		* @return builder
 		*/
@@ -822,6 +904,8 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for colourScaleLowerBound parameter.
+		* Restricts the minimum value (low bound) of the heat map gradient.
+		* Any value below this threshold will be assigned the same minimum colour according to the chosen gradient.
 		* @param colourScaleLowerBound field to set
 		* @return builder
 		*/
@@ -832,6 +916,8 @@ public class HeatMapOptions {
 
 		/**
 		* Builder method for colourScaleUpperBound parameter.
+		* Restricts the maximum value (upper bound) of the heat map gradient.
+		* Any value above this threshold will be assigned the same maximum colour according to the chosen gradient.
 		* @param colourScaleUpperBound field to set
 		* @return builder
 		*/
@@ -846,6 +932,14 @@ public class HeatMapOptions {
 		*/
 		public HeatMapOptions build() {
 			return new HeatMapOptions(this);
+		}
+
+		/**
+		 * Creates builder to build {@link Builder}.
+		 * @return created builder
+		 */
+		public static Builder builder() {
+			return new Builder();
 		}
 	}
 }
