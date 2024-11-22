@@ -2,7 +2,7 @@
 
 Easily create beautiful custom heat maps in only a few lines of Java code!
 
-I orginally developed this code for the [NAPS Data Analysis Toolbox](https://github.com/dbeaudoinfortin/NAPSDataAnalysis) and now I have spun it out into its own project so others can also benefit from it.
+I originally developed this code for the [NAPS Data Analysis Toolbox](https://github.com/dbeaudoinfortin/NAPSDataAnalysis) and now I have spun it out into its own project so others can also benefit from it.
 
 ## Getting Started
 
@@ -27,9 +27,9 @@ HeatMap.builder()
     .withGradient(HeatMapGradient.BASIC_GRADIENT)
     .build())
   .build()
-  .render(myOutPutFile, myDataRecords);
+  .render(myOutputFile, myDataRecords);
 ```
-The output will be a PNG file at the output path of `myOutPutFile`.
+The output will be a PNG file at the output path of `myOutputFile`.
 
 The builder pattern makes it easy to customize your heat map. For example, the following will render a heat map with no titles, no labels, no legend no border, just the core heat map with blending enabled:
 
@@ -89,7 +89,7 @@ The heat maps are highly customizable, down to colours, fonts, gradients, titles
 - 9 pre-defined gradients to choose from if you don't want to define your own
 - Option to blend the colours of each cell using a custom scale factor for applying the linear colour interpolation 
 - Custom background colours
-- Option to render grid lines, including customizating the thickness and colour
+- Option to render grid lines, including customizing the thickness and colour
 - Option to print data values on top of the heat map, with custom formatting, font, and colour
 - Custom cell width and height
 - Custom padding between all the elements (titles, labels, legend, etc.)
@@ -99,7 +99,7 @@ The heat maps are highly customizable, down to colours, fonts, gradients, titles
 - Custom fonts and colours for all titles
 - Option to display labels for the X-axis and Y-axis
 - Custom fonts and colours for the axis labels
-- Labels for the x-axis can rotated and can be rendered either above or below the heat map
+- Labels for the X-axis can be rotated and can be rendered either above or below the heat map
 
 **Legend**
 - Option to display a legend
@@ -112,53 +112,52 @@ All of these options can be set in the `HeatMapOptions` class. The following tab
 
 |Option|Default Value|Description|
 |-|-|-|
-|backgroundColour|White, unless it conflicts with the colour gradient, then grey.|The background colour of the whole chart|
-|cellWidth|50px|The desired cell width. May be enlarged if it's too small to fit the labels.|
-|cellHeight|50px|The desired cell width. May be enlarged if it's too small to fit the labels.|
-|showGridlines|-|-|
-|gridLineWidth|-|-|
-|gridLineColour|-|-|
-|showXAxisLabels|-|-|
-|xAxisLabelsBelow|-|-|
-|xAxisLabelsRotate|-|-|
-|showYAxisLabels|-|-|
-|axisLabelFont|-|-|
-|axisLabelFontColour|-|-|
-|axisTitleFont|-|-|
-|heatMapTitleFont|-|-|
-|axisTitleFontColour|-|-|
-|heatMapTitleFontColour|-|-|
-|showGridValues|-|-|
-|gridValuesFormat|-|-|
-|gridValuesFont|-|-|
-|gridValuesFontColour|-|-|
-|blendColours|-|-|
-|blendColoursScale|-|-|
-|axisLabelPadding|-|-|
-|axisTitlePadding|-|-|
-|heatMapTitlePadding|-|-|
-|outsidePadding|-|-|
-|legendPadding|-|-|
-|showLegend|-|-|
-|legendTextFormat|-|-|
-|legendLabelFont|-|-|
-|legendLabelFontColour|-|-|
-|legendSteps|-|-|
-|gradient|-|-|
-|colourScaleLowerBound|Automatically calculated based on the lowest data value.|-|
-|colourScaleUpperBound|Automatically calculated based on the highest data value.|-|
+|backgroundColour|White, unless it conflicts with the colour gradient, then grey.|The background colour of the whole chart.|
+|cellWidth|50px|The desired cell width in pixels. Will be enlarged if it's too small to fit the labels.|
+|cellHeight|50px|The desired cell width in pixels . Will be enlarged if it's too small to fit the labels.|
+|showGridlines|false|Toggles the rendering of grid lines on the heat map between the cells.|
+|gridLineWidth|1px|The width, in pixels, of the grid lines.|
+|gridLineColour|Black|The colour of the grid lines.|
+|showXAxisLabels|true|Toggles the rendering of the labels for the X-axis.|
+|xAxisLabelsBelow|false|Toggles the rendering of the X-axis labels below the heat map instead of above.|
+|xAxisLabelsRotate|false|Forces the X-axis labels to be rotated 90 degrees and rendered vertically. Otherwise, the X-axis labels will be automatically rotated if they are bigger than the cell width. When the labels are rendered above the heat map they are vertically aligned to the bottom, and when they are rendered below the heat map they are vertically aligned to the top.|
+|showYAxisLabels|true|Toggles the rendering of the labels for the Y-axis.
+|axisLabelFont|Calibri, Plain, 20pts|The font used to render the X-axis and Y-axis labels.|
+|axisLabelFontColour|Black|The colour used to render the X-axis and Y-axis labels.|
+|axisTitleFont|Calibri, Bold, 20pts|The font used to render the X-axis and Y-axis titles.|
+|axisTitleFontColour|Black|The colour used to render the X-axis and Y-axis titles.|
+|heatMapTitleFont|Calibri, Bold, 36pts|The font used to render the overall chart title.|
+|heatMapTitleFontColour|Black|The colour used to render the overall chart title.|
+|showGridValues|false|Toggles the rendering of the values within each cell of the heat map.|
+|gridValuesFormat|0.#|The decimal format used to display the values within each cell of the heat map. The `Double` to `String` conversion makes use of the Java `DecimalFormat` class.|
+|gridValuesFont|Calibri, Plain, 20pts|The font used to render the values within each cell of the heat map.|
+|gridValuesFontColour|Black|The colour used to render the values within each cell of the heat map.|
+|blendColours|false|Toggles the blending of colours between adjacent cells of the heat map grid. See the [section below](#colour_blending) for details on how this works.|
+|blendColoursScale|3|The amount of blending to apply. This corresponds to the scaling factor of the bilinear interpolation, essentially how "smooth" the result will be. See the [section below](#colour_blending) for details on how this works.|
+|axisLabelPadding|10px|The amount of blank space (padding), in pixels, between the X-axis and Y-axis labels and the heat map grid.|
+|axisTitlePadding|20px|The amount of blank space (padding), in pixels, below (for the X-axis) and to the right (for the Y-axis) of the axis titles.|
+|heatMapTitlePadding|40px|The amount of blank space (padding), in pixels, below the overall chart title.|
+|outsidePadding|5px|The amount of blank space (padding), in pixels, on the perimeter of the entire chart.|
+|legendPadding|40px|The amount of blank space (padding), in pixels, between the legend and the heat map grid.|
+|showLegend|true|Toggles the rendering of the legend, including the legend labels.|
+|legendTextFormat|0.##|The decimal format used to display the values of the legend labels. The `Double` to `String` conversion makes use of the Java `DecimalFormat` class.
+|legendLabelFont|Calibri, Plain, 20pts|The font used to render the legend labels.|
+|legendLabelFontColour|Black|The colour used to render the legend labels.|
+|legendSteps|The greater of the number of cells of the Y-axis and 5|The number of discrete colour steps to include in the legend. The minimum value is 2.|
+|gradient|`HeatMapGradient.BASIC_GRADIENT`|The colour gradient for the heat map. See the [section below](#heat_map_gradients) for details on how this works.|
+|colourScaleLowerBound|Automatically calculated based on the lowest data value.|Restricts the minimum value (low bound) of the heat map gradient. Any value below this threshold will be assigned the same minimum colour according to the chosen gradient.|
+|colourScaleUpperBound|Automatically calculated based on the highest data value.|Restricts the maximum value (upper bound) of the heat map gradient. Any value above this threshold will be assigned the same maximum colour according to the chosen gradient.|
 
+## Heat Map Gradients
 
-## Pre-Defined Heat Map Gradients
-
-There are 9 pe-defined gradients to choose from. I plan to eventually add more in the future. The current palettes are the following:
-1. A smooth gradient based on the colour wheel from blue to red. All the of the colours are fully saturated.
+There are 9 pre-defined gradients to choose from. I plan to eventually add more in the future. The current palettes are the following:
+1. A smooth gradient based on the colour wheel from blue to red. All of the colours are fully saturated.
 2. A 12 step gradient from blue to red with less saturation than the first colour palette.
 3. A simplified 5 step gradient from blue to red.
 4. A two colour gradient from blue to red, with purple mixed in-between.
 5. A 5 step colour blind friendly gradient of greenish-yellow to dark orange.
-6. A 3 step black-red-orange gradient, similar to black-body radiation, up to approximately 1300 degrees kelvin.
-7. Same as number 6 but two more steps are added to extend the scale up to approximately 6500k degrees kelvin.
+6. A 3 step black-red-orange gradient, similar to black-body radiation, up to approximately 1300 degrees Kelvin.
+7. Same as number 6 but two more steps are added to extend the scale up to approximately 6500k degrees Kelvin.
 8. A 50 step colour gradient based on [Dave Green's ‘cubehelix’ colour scheme](https://people.phy.cam.ac.uk/dag9/CUBEHELIX/)
 9. A 2 step grey-scale gradient that should be used for non-colour screen/print-outs.
 
