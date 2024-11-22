@@ -75,6 +75,8 @@ StringAxis  yAxis = new StringAxis("Weird Cars", "BMC Landcrab", "Ford Probe", "
 <p align="center">
   <img src="https://github.com/user-attachments/assets/998bc959-98e0-402d-8a2e-504b01f2d917" width="400" />
   <img src="https://github.com/user-attachments/assets/2ce8e484-b4ab-429a-8c59-d2b79cd66107" width="400" />
+  <img src="https://github.com/user-attachments/assets/30dfa516-0e8c-4327-8609-3e6747a19e09" width="400" />
+  <img src="https://github.com/user-attachments/assets/6164081d-b6f3-4fd3-a210-3ca05074cb94" width="400" />
   <img src="https://github.com/user-attachments/assets/00434021-e13b-4797-b5cb-4e236c591a29" width="800" />
   <img src="https://github.com/user-attachments/assets/b814eb8f-5e93-4184-a764-a91d6f990880" width="400" />
   <img src="https://github.com/user-attachments/assets/650c4387-c5b4-4005-ad42-3c344b5436ba" width="400" />
@@ -164,8 +166,8 @@ There are 9 pre-defined gradients to choose from. I plan to eventually add more 
 The default colour palette, if not specified, is set to number 3. Here are examples of what the colour palettes look like, in order:
 
 <p align="center">
- <img src="https://github.com/user-attachments/assets/5752f84b-8e6c-4164-9631-1f0430230471" />
- <img src="https://github.com/user-attachments/assets/bdcd777e-2dda-4a1b-94b0-8cb113a59ac0" />
+<img src="https://github.com/user-attachments/assets/5752f84b-8e6c-4164-9631-1f0430230471" />
+<img src="https://github.com/user-attachments/assets/bdcd777e-2dda-4a1b-94b0-8cb113a59ac0" />
 <img src="https://github.com/user-attachments/assets/b9402f99-a82d-4163-8d27-4be4eef6812c" />
 <img src="https://github.com/user-attachments/assets/b582757d-824a-4f61-8410-8451b158e1ad" />
 <img src="https://github.com/user-attachments/assets/4d9c962d-33bd-4de8-86b7-77e55506312c" />
