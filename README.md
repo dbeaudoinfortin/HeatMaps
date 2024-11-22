@@ -20,7 +20,7 @@ Customize your heat map using the builder class and render it by calling `HeatMa
 
 ```java
 HeatMap.builder()
-  .withTitle(shortTitle)
+  .withTitle("My New Chart")
   .withXAxis(xAxis)
   .withYAxis(yAxis)
   .withOptions(HeatMapOptions.builder()
@@ -31,7 +31,7 @@ HeatMap.builder()
 ```
 The output will be a PNG file at the output path of `myOutputFile`.
 
-The builder pattern makes it easy to customize your heat map. For example, the following will render a heat map with no titles, no labels, no legend no border, just the core heat map with blending enabled:
+The builder pattern makes it easy to customize your heat map. For example, the following will render a heat map with no titles, no labels, no legend no border, just the core heat map with blending enabled and upper & lower bounds set:
 
 ```java
 HeatMap.builder()
@@ -45,8 +45,8 @@ HeatMap.builder()
     .withOutsidePadding(0)
     .withBlendColours(true)
     .withBlendColoursScale(5)
-    .withColourScaleLowerBound(5)
-    .withColourScaleUpperBound(20)
+    .withColourScaleLowerBound(5.0)
+    .withColourScaleUpperBound(20.0)
     .withGradient(HeatMapGradient.getCannedGradient(5)
     .build())
   .build()
