@@ -159,7 +159,7 @@ public class HeatMap {
 		}
 		
 		//Calculate legend sizes
-		final Entry<Integer, Integer> legendLabelDimensions = getMaxStringSize(legendLabels, options.getAxisTitleFont());
+		final Entry<Integer, Integer> legendLabelDimensions = getMaxStringSize(legendLabels, options.getLegendLabelFont());
 		final int legendLabelMaxWidth = legendLabelDimensions.getKey();
 		final int legendLabelHeight = legendLabelDimensions.getValue();
 		
