@@ -47,7 +47,7 @@ HeatMap.builder()
     .withBlendColoursScale(5)
     .withColourScaleLowerBound(5.0)
     .withColourScaleUpperBound(20.0)
-    .withGradient(HeatMapGradient.getCannedGradient(5)
+    .withGradient(HeatMapGradient.getCannedGradient(5))
     .build())
   .build()
   .render(myOutputFile, myDataRecords);
