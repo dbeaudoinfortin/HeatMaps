@@ -17,7 +17,7 @@ import com.dbf.heatmaps.axis.IntegerAxis;
 import com.dbf.heatmaps.data.BasicDataRecord;
 import com.dbf.heatmaps.data.DataRecord;
 
-class HeatMapTest {
+class CoreLatencyMapTest {
 
 	@Test
 	void CoreLatencyHeatMap() throws IOException {

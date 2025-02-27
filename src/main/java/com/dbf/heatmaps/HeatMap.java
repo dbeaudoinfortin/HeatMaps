@@ -518,9 +518,9 @@ public class HeatMap {
 	 * @param strings A collection of strings to be measured. 
 	 * @param font The Font used for rendering the text.
 	 * 
-	 * @return The X & Y dimensions of the longest string of text, in the form of <code>Entry<x_dimension, y_dimension></code>
+	 * @return The X and Y dimensions of the longest string of text, in the form of <code>Entry&lt;x_dimension, y_dimension&gt;</code>
 	 */
-	private static Entry<Integer, Integer> getMaxStringSize(Collection<String> strings, Font font) {
+	protected Entry<Integer, Integer> getMaxStringSize(Collection<String> strings, Font font) {
 		if (null == strings || strings.isEmpty()) return new AbstractMap.SimpleEntry<Integer, Integer>(0, 0);
 		
 		//Create a temporary image to get Graphics2D context for measuring
@@ -551,10 +551,10 @@ public class HeatMap {
 	 * @param maxWidth The maximum width, in pixel, that each line of the title will be when rendered.
 	 * @param font The Font used for rendering the text.
 	 * 
-	 * @return A list of the individual lines of text of the title, with each entry containing the X & Y dimensions of the line,
-	 * in pixels. In the form of <code>List<Entry<line_of_text, Entry<x_dimension, y_dimension>>></code> 
+	 * @return A list of the individual lines of text of the title, with each entry containing the X and Y dimensions of the line,
+	 * in pixels. In the form of <code>List&lt;Entry&lt;line_of_text, Entry&lt;x_dimension, y_dimension&gt;&gt;&gt;</code> 
 	 */
-	private List<Entry<String, Entry<Integer, Integer>>> getTitleSized(String title, int maxWidth, Font font) {
+	protected List<Entry<String, Entry<Integer, Integer>>> getTitleSized(String title, int maxWidth, Font font) {
 		//Create a temporary image to get Graphics2D context for measuring
         BufferedImage tinyImage = new BufferedImage(1, 1, BufferedImage.BITMASK);
         Graphics2D g2d = tinyImage.createGraphics();
