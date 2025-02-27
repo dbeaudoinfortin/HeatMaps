@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="100" width="160">
+  <rect fill="#FFFFFF" height="100" width="160"></rect> 
+  
+  <rect fill="#d53e4f" height="20" width="20" y="20" x="20"></rect> 
+  <rect fill="#F28C28" height="20" width="20" y="20" x="40"></rect> 
+  <rect fill="#FFD700" height="20" width="20" y="20" x="60"></rect> 
+  <rect fill="#d53e4f" height="20" width="20" y="20" x="100"></rect> 
+  <rect fill="#F28C28" height="20" width="20" y="20" x="80"></rect> 
+  <rect fill="#FFD700" height="20" width="20" y="20" x="120"></rect> 
+  
+  <rect fill="#4CAF50" height="20" width="20" y="40" x="20"></rect> 
+  <rect fill="#007ACC" height="20" width="20" y="40" x="60"></rect> 
+  <rect fill="#3288bd" height="20" width="20" y="40" x="40"></rect> 
+  <rect fill="#4CAF50" height="20" width="20" y="40" x="80"></rect> 
+  <rect fill="#007ACC" height="20" width="20" y="40" x="100"></rect> 
+  <rect fill="#3288bd" height="20" width="20" y="40" x="120"></rect> 
+  
+  <rect fill="#f46c43" height="20" width="20" y="60" x="20"></rect> 
+  <rect fill="#4CAF50" height="20" width="20" y="60" x="40"></rect> 
+  <rect fill="#007ACC" height="20" width="20" y="60" x="60"></rect> 
+  <rect fill="#fda159" height="20" width="20" y="60" x="80"></rect> 
+  <rect fill="#4CAF50" height="20" width="20" y="60" x="100"></rect> 
+  <rect fill="#007ACC" height="20" width="20" y="60" x="120"></rect>
+</svg>
