@@ -1,4 +1,4 @@
-# HeatMaps
+# HeatMaps <img src="https://github.com/user-attachments/assets/66dd7073-07c2-43e0-98df-1734fb196f52" height="25"/>
 
 Easily create beautiful custom heat maps in only a few lines of Java code!
 
