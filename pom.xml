@@ -19,6 +19,10 @@
 			<url>https://github.com/dbeaudoinfortin</url>
 		</developer>
 	</developers>
+	<organization>
+		<name>David Fortin</name>
+		<url>https://github.com/dbeaudoinfortin</url>
+	</organization>
 	<scm>
 		<connection>scm:git:git://github.com/dbeaudoinfortin/HeatMaps.git</connection>
 		<developerConnection>scm:git:ssh://github.com:dbeaudoinfortin/HeatMaps.git</developerConnection>
