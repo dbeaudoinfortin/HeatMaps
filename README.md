@@ -80,6 +80,9 @@ StringAxis  yAxis = new StringAxis("Weird Cars", "BMC Landcrab", "Ford Probe", "
   <img src="https://github.com/user-attachments/assets/00434021-e13b-4797-b5cb-4e236c591a29" width="800" />
   <img src="https://github.com/user-attachments/assets/b814eb8f-5e93-4184-a764-a91d6f990880" width="400" />
   <img src="https://github.com/user-attachments/assets/650c4387-c5b4-4005-ad42-3c344b5436ba" width="400" />
+  <img src="https://github.com/user-attachments/assets/c8110ba5-d3b8-4140-a554-58b42ffd0113" width="400" />
+  <img src="https://github.com/user-attachments/assets/3ebdd5b6-4e38-4150-b620-0029909fae9c" width="400" />
+  <img src="https://github.com/user-attachments/assets/03359905-db1c-4f1c-b759-9439a0d644e2" width="400" />
 </p>
 
 ## Customization Options
