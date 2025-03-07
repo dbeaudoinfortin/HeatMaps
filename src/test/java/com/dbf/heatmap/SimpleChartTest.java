@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
@@ -17,10 +15,10 @@ import com.dbf.heatmaps.axis.IntegerAxis;
 import com.dbf.heatmaps.data.BasicDataRecord;
 import com.dbf.heatmaps.data.DataRecord;
 
-class SimpleChartTest {
+class SimpleChartTest extends AbstractHeatMapTest {
 
 	@Test
-	void CoreLatencyHeatMap() throws IOException {
+	void SimpleChartHeatMapTest() throws IOException {
 		File output = getTempFile("simple_chart.png");
 		System.out.println("Generating the simple chart test heat map at file " + output.getAbsolutePath());
 		
@@ -30,7 +28,6 @@ class SimpleChartTest {
 			records.add(new BasicDataRecord(x,1, values[arrayIndex]));
 			arrayIndex++;
 		}
-		
 		
 		HeatMap.builder()
 			.withTitle("")
@@ -68,14 +65,7 @@ class SimpleChartTest {
 					.build())
 		.build()
 		.render(output, records);
-		System.out.println("Generated the core latency test heat map at file " + output.getAbsolutePath());
-	}
-	
-	private static final File getTempFile(String name) throws IOException {
-		Path directory = Files.createTempDirectory("heatmap_tests");
-		File outputFile = directory.resolve(name).toFile();
-		outputFile.deleteOnExit();
-		return outputFile;
+		System.out.println("Generated the simple chart test heat map at file " + output.getAbsolutePath());
 	}
 
 	private static final double[] values = { 1,2,3,4,5,6,7,8,9,10,11 };
