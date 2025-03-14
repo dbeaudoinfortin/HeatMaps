@@ -1,4 +1,4 @@
-package com.dbf.heatmap;
+package com.dbf.heatmaps;
 
 import java.awt.Color;
 import java.awt.Font;
