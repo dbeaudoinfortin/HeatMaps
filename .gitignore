@@ -1,4 +1,9 @@
 /.settings
-/target
-/.project
-/.classpath
+/Android/target
+/Android/.settings
+/Java2D/.settings
+/Java2D/target
+/Java2D/.classpath
+/Java2D/.project
+/Android/.project
+/Android/.classpath

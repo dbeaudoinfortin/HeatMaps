@@ -65,7 +65,9 @@ public class HeatMap {
 	
 	public BufferedImage render(Collection<DataRecord> data) {
 		//Basic sanity checks
-		if(null == data || data.isEmpty()) throw new IllegalArgumentException("Missing data.");
+		if(null == data || data.isEmpty())
+			throw new IllegalArgumentException("Missing data.");
+		
 		validate();
 		
 		//Determine the bounds of the data values
@@ -136,7 +138,7 @@ public class HeatMap {
 		
 		//Calculate the legend values
 		//We use the defined size, if provided. Otherwise, we take the greater of either the number of cells of the Y-axis or 5.
-		final int legendBoxes = options.isShowLegend() ? (options.getLegendSteps() != null ? options.getLegendSteps() : (yAxis.getCount() > 5 ? yAxis.getCount() : 5)) : 0;
+		final int legendBoxes = options.isShowLegend() ? (options.getLegendSteps() != null ? options.getLegendSteps() : (Math.max(yAxis.getCount(), 5))) : 0;
 		final double valueRange = maxValue - minValue;
 		final double legendSteps = options.isShowLegend()  ? (valueRange > 0 ? valueRange / (legendBoxes-1) : 0) : 0;
 		final List<Double> legendvalues = new ArrayList<Double>(legendBoxes);
@@ -390,7 +392,7 @@ public class HeatMap {
     	        for (DataRecord record: data) {
     	        	if(null == record.getValue()) continue; //No data, perfectly valid.
         			//Determine the colour for this pixel of the map
-    				final double val = minClamped || maxClamped ? Math.max(Math.min(record.getValue().doubleValue(), maxValue), minValue) : record.getValue().doubleValue();
+    				final double val = minClamped || maxClamped ? Math.max(Math.min(record.getValue(), maxValue), minValue) : record.getValue();
     				g2dTiny.setColor(options.getGradient().getColour((valueRange == 0 ? 1.0 : (val-minValue) / valueRange)));
         			g2dTiny.fillRect(xAxis.getIndex(record.getX()), yAxis.getIndex(record.getY()), 1, 1);
         			g2dBilinearMask.fillRect(xAxis.getIndex(record.getX())*scaleFactor, yAxis.getIndex(record.getY())*scaleFactor, scaleFactor, scaleFactor);
@@ -435,7 +437,7 @@ public class HeatMap {
         			final int y = yAxis.getIndex(record.getY());
         			
         			//Determine the colour for this square of the map
-    				final double val = minClamped || maxClamped ? Math.max(Math.min(record.getValue().doubleValue(), maxValue), minValue) : record.getValue().doubleValue();
+    				final double val = minClamped || maxClamped ? Math.max(Math.min(record.getValue(), maxValue), minValue) : record.getValue();
     				g2d.setColor(options.getGradient().getColour((valueRange == 0 ? 1.0 : (val-minValue) / valueRange)));
     				
     				final int matrixCellOffsetX = options.isShowGridlines() ?  x * (cellWidth  + options.getGridLineWidth()) : x * cellWidth;

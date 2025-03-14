@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.dbeaudoinfortin</groupId>
-	<artifactId>heatmaps</artifactId>
-	<version>0.0.4</version>
+	<artifactId>heatmaps-android</artifactId>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
-	<name>HeatMaps</name>
+	<name>HeatMaps for Android</name>
 	<description>Build customized heat maps diagrams the quick and easy way!</description>
 	<url>https://github.com/dbeaudoinfortin/HeatMaps</url>
 	<licenses>
@@ -34,6 +34,12 @@
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.11.3</version>
 			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>io.github.dbeaudoinfortin</groupId>
+			<artifactId>heatmaps</artifactId>
+			<version>0.0.5</version>
 		</dependency>
 	</dependencies>
 	<build>
