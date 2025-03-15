@@ -77,6 +77,10 @@ StringAxis  yAxis = new StringAxis("Weird Cars", "BMC Landcrab", "Ford Probe", "
   <img src="https://github.com/user-attachments/assets/2ce8e484-b4ab-429a-8c59-d2b79cd66107" width="400" />
   <img src="https://github.com/user-attachments/assets/30dfa516-0e8c-4327-8609-3e6747a19e09" width="400" />
   <img src="https://github.com/user-attachments/assets/6164081d-b6f3-4fd3-a210-3ca05074cb94" width="400" />
+  <img src="https://github.com/user-attachments/assets/df7c5ccd-298c-40d6-b3b3-1cfa72eeaa7a" width="400" />
+  <img src="https://github.com/user-attachments/assets/cd078a2f-1292-42bb-b802-53e87c4a9c10" width="400" />
+  <img src="https://github.com/user-attachments/assets/d0815aca-2691-400d-872b-df436d315401" width="400" />
+  <img src="https://github.com/user-attachments/assets/50be3747-c9ba-46ec-bfc5-81a886c96c12" width="400" />
   <img src="https://github.com/user-attachments/assets/00434021-e13b-4797-b5cb-4e236c591a29" width="800" />
   <img src="https://github.com/user-attachments/assets/b814eb8f-5e93-4184-a764-a91d6f990880" width="400" />
   <img src="https://github.com/user-attachments/assets/650c4387-c5b4-4005-ad42-3c344b5436ba" width="400" />
