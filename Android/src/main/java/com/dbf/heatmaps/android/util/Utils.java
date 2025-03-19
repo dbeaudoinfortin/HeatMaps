@@ -2,6 +2,8 @@ package com.dbf.heatmaps.android.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.FontMetrics;
 
 public class Utils {
 	public static void removePartialTransparentPixels(Bitmap bitmap) {
@@ -24,4 +26,12 @@ public class Utils {
             bitmap.setPixels(pixels, 0, width, 0, y, width, 1);
         }
     }
+	
+	public static int getFontSize(FontMetrics fontMetrics) {
+		return (int) Math.ceil(Math.abs(fontMetrics.ascent) + Math.abs(fontMetrics.descent));
+	}
+	
+	public static int measureText(Paint measurePaint, String text) {
+		return (int) Math.ceil(measurePaint.measureText(text));
+	}
 }

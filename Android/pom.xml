@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.dbeaudoinfortin</groupId>
 	<artifactId>heatmaps-android</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.1.3</version>
 	<packaging>jar</packaging>
 	<name>HeatMaps for Android</name>
 	<description>Build customized heat maps diagrams the quick and easy way!</description>
@@ -41,6 +41,15 @@
 			<artifactId>heatmaps</artifactId>
 			<version>0.0.5</version>
 		</dependency>
+		
+		<dependency>
+		  <groupId>com.android</groupId>
+		  <artifactId>android</artifactId>
+		  <version>34.0</version>
+		  <scope>system</scope>
+		  <systemPath>C:\Users\David\AppData\Local\Android\Sdk\platforms\android-34/android.jar</systemPath>
+		</dependency>
+		
 	</dependencies>
 	<build>
 		<plugins>

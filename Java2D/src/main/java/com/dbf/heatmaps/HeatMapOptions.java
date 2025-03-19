@@ -31,7 +31,7 @@ public class HeatMapOptions {
 	/* AXIS LABELS */
 	private boolean showXAxisLabels   = true;
 	private boolean showYAxisLabels   = true;
-	private boolean xAxisLabelsBelow  = false;
+	private boolean xAxisLabelsBelow  = false; //TODO, Support both above and below at the same time
 	private boolean xAxisLabelsRotate = false;
 	private Font  axisLabelFont = DEFAULT_BASIC_FONT;
 	private Color axisLabelFontColour = DEFAULT_FONT_COLOUR;

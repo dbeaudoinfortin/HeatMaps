@@ -25,6 +25,8 @@ import com.dbf.heatmaps.data.DataRecord;
 
 public class HeatMap {
 
+	private static final Color ALTERNATIVE_BACKGROUND_COLOUR = new Color(210, 210, 210);
+	
 	private HeatMapOptions options;
 
 	private Axis<?> xAxis;
@@ -56,6 +58,9 @@ public class HeatMap {
 		this.title = title;
 	}
 
+	/**
+     * Renders the heat map and writes it as a PNG file.
+     */
 	public void render(File file, Collection<DataRecord> data) throws IOException {
 		if(null == file) throw new IllegalArgumentException("Invalid file.");
 		
@@ -63,6 +68,9 @@ public class HeatMap {
 		ImageIO.write(heatmapImage, "png", file);
 	}
 	
+	/**
+     * Renders the heat map data to a bitmap image.
+     */
 	public BufferedImage render(Collection<DataRecord> data) {
 		//Basic sanity checks
 		if(null == data || data.isEmpty())
@@ -92,6 +100,7 @@ public class HeatMap {
 			maxClamped = true;
 			maxValue = options.getColourScaleUpperBound();
 		}
+		final double valueRange = maxValue - minValue;
 		
 		//Determine the dimensions of the X-axis and Y-axis labels
 		//We need to render all of the X & Y labels first so we can determine the maximum size the labels will take to render
@@ -139,25 +148,25 @@ public class HeatMap {
 		//Calculate the legend values
 		//We use the defined size, if provided. Otherwise, we take the greater of either the number of cells of the Y-axis or 5.
 		final int legendBoxes = options.isShowLegend() ? (options.getLegendSteps() != null ? options.getLegendSteps() : (Math.max(yAxis.getCount(), 5))) : 0;
-		final double valueRange = maxValue - minValue;
+		
 		final double legendSteps = options.isShowLegend()  ? (valueRange > 0 ? valueRange / (legendBoxes-1) : 0) : 0;
-		final List<Double> legendvalues = new ArrayList<Double>(legendBoxes);
+		final List<Double> legendValues = new ArrayList<Double>(legendBoxes);
 		if(options.isShowLegend()) {
-			legendvalues.add(minValue);
+			legendValues.add(minValue);
 				for(int i = 1; i < legendBoxes -1; i++) {
-					legendvalues.add(minValue + (i*legendSteps));
+					legendValues.add(minValue + (i*legendSteps));
 				}
-			legendvalues.add(maxValue);
+			legendValues.add(maxValue);
 		}
 		
 		//Calculate the legend labels
 		final DecimalFormat legendDF = new DecimalFormat(options.getLegendTextFormat()); //Not thread safe, don't make static
-		final List<String> legendLabels = legendvalues.stream().map(v->legendDF.format(v)).collect(Collectors.toList());
+		final List<String> legendLabels = legendValues.stream().map(v->legendDF.format(v)).collect(Collectors.toList());
 		
 		if(options.isShowLegend()) {
 			//We need to indicate in the legend if the values are being capped/bounded/clamped
 			if(minClamped) legendLabels.set(0, "<= " + legendLabels.get(0));
-			if(maxClamped) legendLabels.set(legendvalues.size()-1, ">= " + legendLabels.get(legendvalues.size()-1));
+			if(maxClamped) legendLabels.set(legendValues.size()-1, ">= " + legendLabels.get(legendValues.size()-1));
 		}
 		
 		//Calculate legend sizes
@@ -219,6 +228,7 @@ public class HeatMap {
         //Outside padding + big title + title padding + X Axis Title + label padding + X Axis Labels + label padding + chart height + outside padding
         final int imageHeight = matrixStartPosY + Math.max(matrixHeight, legendHeight) + ((options.isShowXAxisLabels() && options.isxAxisLabelsBelow()) ? (options.getAxisLabelPadding() + xAxisLabelHeight): 0) + options.getOutsidePadding();
         
+        //We are ready to start the actual drawing, create the image object.
         BufferedImage heatmapImage = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = heatmapImage.createGraphics();
         
@@ -234,7 +244,7 @@ public class HeatMap {
 				//Make the background all white, except if the colour scale goes to white
 				Color maxColour = options.getGradient().getColour(1.0);
 				if(maxColour.getBlue() > 240 && maxColour.getGreen() > 240 && maxColour.getRed() > 240) {
-					g2d.setColor(new Color(210, 210, 210));
+					g2d.setColor(ALTERNATIVE_BACKGROUND_COLOUR);
 				} else {
 					g2d.setColor(Color.WHITE);
 				}
@@ -281,7 +291,7 @@ public class HeatMap {
 	    			} else if (i == legendBoxes -1) {
 	    				g2d.setColor(options.getGradient().getColour(0.0));
 	    			} else {
-	    				g2d.setColor(options.getGradient().getColour((1-(legendvalues.get(i)-minValue)/valueRange)));
+	    				g2d.setColor(options.getGradient().getColour((1-(legendValues.get(i)-minValue)/valueRange)));
 	    			}
 	    			final int legendBoxPosX = legendStartPosX + (options.isShowGridlines() ? options.getGridLineWidth() : 0);
 	    			final int legendBoxPosY = legendStartPosY + (options.isShowGridlines() ? (options.getGridLineWidth() + i * (cellHeight + options.getGridLineWidth())) : i * cellHeight);
@@ -336,7 +346,7 @@ public class HeatMap {
 	    	FontMetrics labelFontMetrics = g2d.getFontMetrics(); //Font is different between titles and labels
 	    	
 	    	if(options.isShowXAxisLabels()) {
-	    		//Add all of the x labels, drawn vertically or horizontally
+	    		//Draw all of the x labels, drawn vertically or horizontally
 		    	AffineTransform transform;
 	    		for (Entry<String, Integer> entry : xAxis.getLabelIndices().entrySet()) {
 	    			if(rotateXLabels) {
@@ -371,7 +381,7 @@ public class HeatMap {
 	    		}
 	    	}
     		
-    		//Determine if we should smoothly blend the colours    		
+    		//Determine if we should smoothly blend the colours
     		if(options.isBlendColours()) {
     			final int scaleFactor = options.getBlendColoursScale();
     			

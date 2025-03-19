@@ -295,10 +295,10 @@ public class HeatMapGradient {
         Color colour2 = steps[stopIndex + 1];
 
         //Linearly interpolate between the two stops
-        double stopFraction = scaledPosition - stopIndex;
-        int r = (int) (colour1.red() * (1 - stopFraction) + colour2.red() * stopFraction);
-        int g = (int) (colour1.green() * (1 - stopFraction) + colour2.green() * stopFraction);
-        int b = (int) (colour1.blue() * (1 - stopFraction) + colour2.blue() * stopFraction);
+        float stopFraction = (float) (scaledPosition - stopIndex);
+        float r = colour1.red() * (1 - stopFraction) + colour2.red() * stopFraction;
+        float g = colour1.green() * (1 - stopFraction) + colour2.green() * stopFraction;
+        float b = colour1.blue() * (1 - stopFraction) + colour2.blue() * stopFraction;
         return Color.valueOf(r, g, b);
     }
 

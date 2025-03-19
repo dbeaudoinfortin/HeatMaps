@@ -8,9 +8,6 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
-import com.dbf.heatmaps.HeatMap;
-import com.dbf.heatmaps.HeatMapGradient;
-import com.dbf.heatmaps.HeatMapOptions;
 import com.dbf.heatmaps.axis.IntegerAxis;
 import com.dbf.heatmaps.data.BasicDataRecord;
 import com.dbf.heatmaps.data.DataRecord;
