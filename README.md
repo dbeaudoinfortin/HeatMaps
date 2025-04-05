@@ -12,7 +12,7 @@ Add the following to your `pom.xml`:
 <dependency>
   <groupId>io.github.dbeaudoinfortin</groupId>
   <artifactId>heatmaps</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
 </dependency>
 ```
 
