@@ -1,4 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<properties>
+		<android-systemPath>C:\Users\David\AppData\Local\Android\Sdk\platforms\android-34\android.jar</android-systemPath>
+	</properties>
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.dbeaudoinfortin</groupId>
 	<artifactId>heatmaps-android</artifactId>
@@ -45,9 +49,9 @@
 		<dependency>
 		  <groupId>com.android</groupId>
 		  <artifactId>android</artifactId>
-		  <version>34.0</version>
+		  <version>34</version>
 		  <scope>system</scope>
-		  <systemPath>C:\Users\David\AppData\Local\Android\Sdk\platforms\android-34/android.jar</systemPath>
+		  <systemPath>${android-systemPath}</systemPath>
 		</dependency>
 		
 	</dependencies>

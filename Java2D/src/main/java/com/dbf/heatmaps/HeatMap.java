@@ -60,6 +60,19 @@ public class HeatMap {
 
 	/**
      * Renders the heat map and writes it as a PNG file.
+     * 
+     * This is a convenience method that calls {@link #render(Collection)} to build
+     * an in-memory {@link BufferedImage} and then encodes that image as a PNG.
+     *
+     * @param file the output file to write to. The file will be created if it does not
+     *             exist, and overwritten if it does.
+     * @param data the collection of {@code DataRecord} instances to render. Each record
+     *             contributes to the heat map.
+     *
+     * @throws IllegalArgumentException if {@code file} is {@code null}, or if {@code data}
+     *                                  is {@code null} or empty
+     *                                  
+     * @throws IOException if the rendered image cannot be encoded or written to {@code file}
      */
 	public void render(File file, Collection<DataRecord> data) throws IOException {
 		if(null == file) throw new IllegalArgumentException("Invalid file.");
@@ -69,7 +82,14 @@ public class HeatMap {
 	}
 	
 	/**
-     * Renders the heat map data to a bitmap image.
+     * Renders the heat map data to a {@link BufferedImage} bitmap image.
+     * 
+     * @param data collection of {@code DataRecord} instances to render. Must not be {@code null} or empty.
+     *
+     * @return a {@link BufferedImage} containing the rendered heat map
+     *
+     * @throws IllegalArgumentException if {@code data} is {@code null} or empty, or if the renderer
+     *                                  is not in a valid state according to {@link #validate()}.
      */
 	public BufferedImage render(Collection<DataRecord> data) {
 		//Basic sanity checks

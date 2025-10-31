@@ -6,20 +6,21 @@ import java.awt.Font;
 public class HeatMapOptions {
 	
 	/* FONTS */
-	private static final Color DEFAULT_FONT_COLOUR = Color.BLACK;
-	private static final Font  DEFAULT_BASIC_FONT          = new Font("Calibri", Font.PLAIN, 20);
-	private static final Font  DEFAULT_AXIS_TITLE_FONT     = new Font("Calibri", Font.BOLD, 20);
-	private static final Font  DEFAULT_HEATMAP_TITLE_FONT  = new Font("Calibri", Font.BOLD, 36);
+	public static final Color DEFAULT_FONT_COLOUR = Color.BLACK;
+	
+	public static final Font  DEFAULT_BASIC_FONT          = new Font("Calibri", Font.PLAIN, 20);
+	public static final Font  DEFAULT_AXIS_TITLE_FONT     = new Font("Calibri", Font.BOLD, 20);
+	public static final Font  DEFAULT_HEATMAP_TITLE_FONT  = new Font("Calibri", Font.BOLD, 36);
 	
 	/* MAIN CANVAS */
-	private static final Color DEFAULT_GRID_COLOUR = Color.BLACK;
+	public static final Color DEFAULT_GRID_COLOUR = Color.BLACK;
 	
 	private Color backgroundColour;
 	
 	/* CELLS */
-	private static final int DEFAULT_CELL_WIDTH  = 50;
-	private static final int DEFAULT_CELL_HEIGHT = DEFAULT_CELL_WIDTH;
-	private static final int DEFAULT_GRID_WIDTH  = 1;
+	public static final int DEFAULT_CELL_WIDTH  = 50;
+	public static final int DEFAULT_CELL_HEIGHT = DEFAULT_CELL_WIDTH;
+	public static final int DEFAULT_GRID_WIDTH  = 1;
 	private int cellWidth  = DEFAULT_CELL_WIDTH;
 	private int cellHeight = DEFAULT_CELL_HEIGHT;
 	
@@ -55,11 +56,11 @@ public class HeatMapOptions {
 	private int blendColoursScale = DEFAULT_BLEND_SCALE;
 	
 	/* PADDING */
-	private static final int DEFAULT_LABEL_PADDING = 10;
-	private static final int DEFAULT_AXIS_TITLE_PADDING = DEFAULT_LABEL_PADDING * 2;
-	private static final int DEFAULT_CHART_TITLE_PADDING = DEFAULT_LABEL_PADDING * 4;
-	private static final int DEFAULT_LEGEND_PADDING = DEFAULT_CHART_TITLE_PADDING;
-	private static final int DEFAULT_OUTSIDE_PADDING = 5;
+	public static final int DEFAULT_LABEL_PADDING = 10;
+	public static final int DEFAULT_AXIS_TITLE_PADDING = DEFAULT_LABEL_PADDING * 2;
+	public static final int DEFAULT_CHART_TITLE_PADDING = DEFAULT_LABEL_PADDING * 4;
+	public static final int DEFAULT_LEGEND_PADDING = DEFAULT_CHART_TITLE_PADDING;
+	public static final int DEFAULT_OUTSIDE_PADDING = 5;
 	
 	private int axisLabelPadding    = DEFAULT_LABEL_PADDING;
 	private int axisTitlePadding    = DEFAULT_AXIS_TITLE_PADDING;

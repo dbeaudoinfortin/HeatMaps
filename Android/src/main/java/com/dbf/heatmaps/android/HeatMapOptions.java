@@ -5,25 +5,25 @@ import android.graphics.Typeface;
 public class HeatMapOptions {
 	
 	/* FONTS */
-	private static final Color DEFAULT_FONT_COLOUR = Color.valueOf(Color.BLACK);
+	public static final Color DEFAULT_FONT_COLOUR = Color.valueOf(Color.BLACK);
 	
-	private static final Typeface  DEFAULT_BASIC_FONT_TYPEFACE          = Typeface.create("Calibri", Typeface.NORMAL);
-	private static final Typeface  DEFAULT_AXIS_TITLE_FONT_TYPEFACE     = Typeface.create("Calibri", Typeface.BOLD);
-	private static final Typeface  DEFAULT_HEATMAP_TITLE_FONT_TYPEFACE  = Typeface.create("Calibri", Typeface.BOLD);
+	public static final Typeface  DEFAULT_BASIC_FONT_TYPEFACE          = Typeface.create("Calibri", Typeface.NORMAL);
+	public static final Typeface  DEFAULT_AXIS_TITLE_FONT_TYPEFACE     = Typeface.create("Calibri", Typeface.BOLD);
+	public static final Typeface  DEFAULT_HEATMAP_TITLE_FONT_TYPEFACE  = Typeface.create("Calibri", Typeface.BOLD);
 	
-	private static final Float  DEFAULT_BASIC_FONT_SIZE         = 20f;
-	private static final Float  DEFAULT_AXIS_TITLE_FONT_SIZE    = 20f;
-	private static final Float  DEFAULT_HEATMAP_TITLE_FONT_SIZE = 36f;
+	public static final Float  DEFAULT_BASIC_FONT_SIZE         = 20f;
+	public static final Float  DEFAULT_AXIS_TITLE_FONT_SIZE    = 20f;
+	public static final Float  DEFAULT_HEATMAP_TITLE_FONT_SIZE = 36f;
 	
 	/* MAIN CANVAS */
-	private static final Color DEFAULT_GRID_COLOUR = Color.valueOf(Color.BLACK);
+	public static final Color DEFAULT_GRID_COLOUR = Color.valueOf(Color.BLACK);
 	
 	private Color backgroundColour;
 	
 	/* CELLS */
-	private static final int DEFAULT_CELL_WIDTH  = 50;
-	private static final int DEFAULT_CELL_HEIGHT = DEFAULT_CELL_WIDTH;
-	private static final int DEFAULT_GRID_WIDTH  = 1;
+	public static final int DEFAULT_CELL_WIDTH  = 50;
+	public static final int DEFAULT_CELL_HEIGHT = DEFAULT_CELL_WIDTH;
+	public static final int DEFAULT_GRID_WIDTH  = 1;
 	private int cellWidth  = DEFAULT_CELL_WIDTH;
 	private int cellHeight = DEFAULT_CELL_HEIGHT;
 	
@@ -66,11 +66,11 @@ public class HeatMapOptions {
 	private int blendColoursScale = DEFAULT_BLEND_SCALE;
 	
 	/* PADDING */
-	private static final int DEFAULT_LABEL_PADDING = 10;
-	private static final int DEFAULT_AXIS_TITLE_PADDING = DEFAULT_LABEL_PADDING * 2;
-	private static final int DEFAULT_CHART_TITLE_PADDING = DEFAULT_LABEL_PADDING * 4;
-	private static final int DEFAULT_LEGEND_PADDING = DEFAULT_CHART_TITLE_PADDING;
-	private static final int DEFAULT_OUTSIDE_PADDING = 5;
+	public static final int DEFAULT_LABEL_PADDING = 10;
+	public static final int DEFAULT_AXIS_TITLE_PADDING = DEFAULT_LABEL_PADDING * 2;
+	public static final int DEFAULT_CHART_TITLE_PADDING = DEFAULT_LABEL_PADDING * 4;
+	public static final int DEFAULT_LEGEND_PADDING = DEFAULT_CHART_TITLE_PADDING;
+	public static final int DEFAULT_OUTSIDE_PADDING = 5;
 	
 	private int axisLabelPadding    = DEFAULT_LABEL_PADDING;
 	private int axisTitlePadding    = DEFAULT_AXIS_TITLE_PADDING;
